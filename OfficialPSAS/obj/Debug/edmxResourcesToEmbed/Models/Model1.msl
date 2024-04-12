@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities">
+    <EntitySetMapping Name="AppointmentRequests">
+      <EntityTypeMapping TypeName="OfficialSASModel.AppointmentRequests">
+        <MappingFragment StoreEntitySet="AppointmentRequests">
+          <ScalarProperty Name="aid" ColumnName="aid" />
+          <ScalarProperty Name="RequestedBy" ColumnName="RequestedBy" />
+          <ScalarProperty Name="status" ColumnName="status" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="group">
+      <EntityTypeMapping TypeName="OfficialSASModel.group">
+        <MappingFragment StoreEntitySet="group">
+          <ScalarProperty Name="gid" ColumnName="gid" />
+          <ScalarProperty Name="pid" ColumnName="pid" />
+          <ScalarProperty Name="creatingDate" ColumnName="creatingDate" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="session" ColumnName="session" />
+          <ScalarProperty Name="tid" ColumnName="tid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Project">
+      <EntityTypeMapping TypeName="OfficialSASModel.Project">
+        <MappingFragment StoreEntitySet="Project">
+          <ScalarProperty Name="pid" ColumnName="pid" />
+          <ScalarProperty Name="title" ColumnName="title" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="status" ColumnName="status" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Schedule">
+      <EntityTypeMapping TypeName="OfficialSASModel.Schedule">
+        <MappingFragment StoreEntitySet="Schedule">
+          <ScalarProperty Name="Sch_id" ColumnName="Sch_id" />
+          <ScalarProperty Name="Day" ColumnName="Day" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Student">
+      <EntityTypeMapping TypeName="OfficialSASModel.Student">
+        <MappingFragment StoreEntitySet="Student">
+          <ScalarProperty Name="st_id" ColumnName="st_id" />
+          <ScalarProperty Name="semester" ColumnName="semester" />
+          <ScalarProperty Name="section" ColumnName="section" />
+          <ScalarProperty Name="cgpa" ColumnName="cgpa" />
+          <ScalarProperty Name="Grade" ColumnName="Grade" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sysdiagrams">
+      <EntityTypeMapping TypeName="OfficialSASModel.sysdiagrams">
+        <MappingFragment StoreEntitySet="sysdiagrams">
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+          <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="definition" ColumnName="definition" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="teacher">
+      <EntityTypeMapping TypeName="OfficialSASModel.teacher">
+        <MappingFragment StoreEntitySet="teacher">
+          <ScalarProperty Name="tid" ColumnName="tid" />
+          <ScalarProperty Name="Ap_Id" ColumnName="Ap_Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Technology">
+      <EntityTypeMapping TypeName="OfficialSASModel.Technology">
+        <MappingFragment StoreEntitySet="Technology">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TechnologyExpert">
+      <EntityTypeMapping TypeName="OfficialSASModel.TechnologyExpert">
+        <MappingFragment StoreEntitySet="TechnologyExpert">
+          <ScalarProperty Name="TechId" ColumnName="TechId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TimeSlots">
+      <EntityTypeMapping TypeName="OfficialSASModel.TimeSlots">
+        <MappingFragment StoreEntitySet="TimeSlots">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="start_time" ColumnName="start_time" />
+          <ScalarProperty Name="end_time" ColumnName="end_time" />
+          <ScalarProperty Name="available" ColumnName="available" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="users">
+      <EntityTypeMapping TypeName="OfficialSASModel.users">
+        <MappingFragment StoreEntitySet="users">
+          <ScalarProperty Name="uid" ColumnName="uid" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="password" ColumnName="password" />
+          <ScalarProperty Name="role" ColumnName="role" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="FK__Appointme__Reque__7C4F7684" TypeName="OfficialSASModel.FK__Appointme__Reque__7C4F7684" StoreEntitySet="AppointmentRequests">
+      <EndProperty Name="users">
+        <ScalarProperty Name="uid" ColumnName="RequestedTo" />
+      </EndProperty>
+      <EndProperty Name="AppointmentRequests">
+        <ScalarProperty Name="aid" ColumnName="aid" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="RequestedTo" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__Appointme__Sch_i__7D439ABD" TypeName="OfficialSASModel.FK__Appointme__Sch_i__7D439ABD" StoreEntitySet="AppointmentRequests">
+      <EndProperty Name="Schedule">
+        <ScalarProperty Name="Sch_id" ColumnName="Sch_id" />
+      </EndProperty>
+      <EndProperty Name="AppointmentRequests">
+        <ScalarProperty Name="aid" ColumnName="aid" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="Sch_id" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__group__Created_b__5FB337D6" TypeName="OfficialSASModel.FK__group__Created_b__5FB337D6" StoreEntitySet="group">
+      <EndProperty Name="users">
+        <ScalarProperty Name="uid" ColumnName="Created_by" />
+      </EndProperty>
+      <EndProperty Name="group">
+        <ScalarProperty Name="gid" ColumnName="gid" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="Created_by" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__teacher__gid__6383C8BA" TypeName="OfficialSASModel.FK__teacher__gid__6383C8BA" StoreEntitySet="teacher">
+      <EndProperty Name="group">
+        <ScalarProperty Name="gid" ColumnName="gid" />
+      </EndProperty>
+      <EndProperty Name="teacher">
+        <ScalarProperty Name="tid" ColumnName="tid" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="gid" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="Fk_Project_group" TypeName="OfficialSASModel.Fk_Project_group" StoreEntitySet="Project">
+      <EndProperty Name="group">
+        <ScalarProperty Name="gid" ColumnName="gid" />
+      </EndProperty>
+      <EndProperty Name="Project">
+        <ScalarProperty Name="pid" ColumnName="pid" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="gid" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__Project__tid__71D1E811" TypeName="OfficialSASModel.FK__Project__tid__71D1E811" StoreEntitySet="Project">
+      <EndProperty Name="teacher">
+        <ScalarProperty Name="tid" ColumnName="tid" />
+      </EndProperty>
+      <EndProperty Name="Project">
+        <ScalarProperty Name="pid" ColumnName="pid" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="tid" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_teacher_Project" TypeName="OfficialSASModel.FK_teacher_Project" StoreEntitySet="teacher">
+      <EndProperty Name="Project">
+        <ScalarProperty Name="pid" ColumnName="pid" />
+      </EndProperty>
+      <EndProperty Name="teacher">
+        <ScalarProperty Name="tid" ColumnName="tid" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="pid" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__Schedule__uid__778AC167" TypeName="OfficialSASModel.FK__Schedule__uid__778AC167" StoreEntitySet="Schedule">
+      <EndProperty Name="users">
+        <ScalarProperty Name="uid" ColumnName="uid" />
+      </EndProperty>
+      <EndProperty Name="Schedule">
+        <ScalarProperty Name="Sch_id" ColumnName="Sch_id" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="uid" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Schedule_TimeSlots" TypeName="OfficialSASModel.FK_Schedule_TimeSlots" StoreEntitySet="Schedule">
+      <EndProperty Name="TimeSlots">
+        <ScalarProperty Name="id" ColumnName="slotId" />
+      </EndProperty>
+      <EndProperty Name="Schedule">
+        <ScalarProperty Name="Sch_id" ColumnName="Sch_id" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="slotId" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_teacher_Schedule" TypeName="OfficialSASModel.FK_teacher_Schedule" StoreEntitySet="teacher">
+      <EndProperty Name="Schedule">
+        <ScalarProperty Name="Sch_id" ColumnName="Sch_id" />
+      </EndProperty>
+      <EndProperty Name="teacher">
+        <ScalarProperty Name="tid" ColumnName="tid" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="Sch_id" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__Student__uid__5CD6CB2B" TypeName="OfficialSASModel.FK__Student__uid__5CD6CB2B" StoreEntitySet="Student">
+      <EndProperty Name="users">
+        <ScalarProperty Name="uid" ColumnName="uid" />
+      </EndProperty>
+      <EndProperty Name="Student">
+        <ScalarProperty Name="st_id" ColumnName="st_id" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="uid" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__teacher__uid__628FA481" TypeName="OfficialSASModel.FK__teacher__uid__628FA481" StoreEntitySet="teacher">
+      <EndProperty Name="users">
+        <ScalarProperty Name="uid" ColumnName="uid" />
+      </EndProperty>
+      <EndProperty Name="teacher">
+        <ScalarProperty Name="tid" ColumnName="tid" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="uid" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__TechnologyE__tid__6EF57B66" TypeName="OfficialSASModel.FK__TechnologyE__tid__6EF57B66" StoreEntitySet="TechnologyExpert">
+      <EndProperty Name="teacher">
+        <ScalarProperty Name="tid" ColumnName="tid" />
+      </EndProperty>
+      <EndProperty Name="TechnologyExpert">
+        <ScalarProperty Name="TechId" ColumnName="TechId" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="tid" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_teacher_Technology" TypeName="OfficialSASModel.FK_teacher_Technology" StoreEntitySet="teacher">
+      <EndProperty Name="Technology">
+        <ScalarProperty Name="id" ColumnName="tecId" />
+      </EndProperty>
+      <EndProperty Name="teacher">
+        <ScalarProperty Name="tid" ColumnName="tid" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="tecId" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__Technolog__tecId__6E01572D" TypeName="OfficialSASModel.FK__Technolog__tecId__6E01572D" StoreEntitySet="TechnologyExpert">
+      <EndProperty Name="Technology">
+        <ScalarProperty Name="id" ColumnName="tecId" />
+      </EndProperty>
+      <EndProperty Name="TechnologyExpert">
+        <ScalarProperty Name="TechId" ColumnName="TechId" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="tecId" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__TechnologyE__uid__6D0D32F4" TypeName="OfficialSASModel.FK__TechnologyE__uid__6D0D32F4" StoreEntitySet="TechnologyExpert">
+      <EndProperty Name="users">
+        <ScalarProperty Name="uid" ColumnName="uid" />
+      </EndProperty>
+      <EndProperty Name="TechnologyExpert">
+        <ScalarProperty Name="TechId" ColumnName="TechId" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="uid" />
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping>

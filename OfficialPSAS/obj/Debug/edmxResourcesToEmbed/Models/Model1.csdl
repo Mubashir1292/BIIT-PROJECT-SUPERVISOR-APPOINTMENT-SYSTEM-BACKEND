@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="OfficialSASModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="AppointmentRequests">
+    <Key>
+      <PropertyRef Name="aid" />
+    </Key>
+    <Property Name="aid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="users" Relationship="Self.FK__Appointme__Reque__7C4F7684" FromRole="AppointmentRequests" ToRole="users" />
+    <NavigationProperty Name="Schedule" Relationship="Self.FK__Appointme__Sch_i__7D439ABD" FromRole="AppointmentRequests" ToRole="Schedule" />
+  </EntityType>
+  <EntityType Name="group">
+    <Key>
+      <PropertyRef Name="gid" />
+    </Key>
+    <Property Name="gid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="pid" Type="Int32" />
+    <Property Name="creatingDate" Type="DateTime" Precision="0" />
+    <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="session" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="tid" Type="Int32" />
+    <NavigationProperty Name="users" Relationship="Self.FK__group__Created_b__5FB337D6" FromRole="group" ToRole="users" />
+    <NavigationProperty Name="teacher" Relationship="Self.FK__teacher__gid__6383C8BA" FromRole="group" ToRole="teacher" />
+    <NavigationProperty Name="Project" Relationship="Self.Fk_Project_group" FromRole="group" ToRole="Project" />
+  </EntityType>
+  <EntityType Name="Project">
+    <Key>
+      <PropertyRef Name="pid" />
+    </Key>
+    <Property Name="pid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="title" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="group" Relationship="Self.Fk_Project_group" FromRole="Project" ToRole="group" />
+    <NavigationProperty Name="teacher" Relationship="Self.FK__Project__tid__71D1E811" FromRole="Project" ToRole="teacher" />
+    <NavigationProperty Name="teacher1" Relationship="Self.FK_teacher_Project" FromRole="Project" ToRole="teacher" />
+  </EntityType>
+  <EntityType Name="Schedule">
+    <Key>
+      <PropertyRef Name="Sch_id" />
+    </Key>
+    <Property Name="Sch_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Day" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="AppointmentRequests" Relationship="Self.FK__Appointme__Sch_i__7D439ABD" FromRole="Schedule" ToRole="AppointmentRequests" />
+    <NavigationProperty Name="users" Relationship="Self.FK__Schedule__uid__778AC167" FromRole="Schedule" ToRole="users" />
+    <NavigationProperty Name="TimeSlots" Relationship="Self.FK_Schedule_TimeSlots" FromRole="Schedule" ToRole="TimeSlots" />
+    <NavigationProperty Name="teacher" Relationship="Self.FK_teacher_Schedule" FromRole="Schedule" ToRole="teacher" />
+  </EntityType>
+  <EntityType Name="Student">
+    <Key>
+      <PropertyRef Name="st_id" />
+    </Key>
+    <Property Name="st_id" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="semester" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="section" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="cgpa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Grade" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="users" Relationship="Self.FK__Student__uid__5CD6CB2B" FromRole="Student" ToRole="users" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="teacher">
+    <Key>
+      <PropertyRef Name="tid" />
+    </Key>
+    <Property Name="tid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Ap_Id" Type="Int32" />
+    <NavigationProperty Name="group" Relationship="Self.FK__teacher__gid__6383C8BA" FromRole="teacher" ToRole="group" />
+    <NavigationProperty Name="Project" Relationship="Self.FK__Project__tid__71D1E811" FromRole="teacher" ToRole="Project" />
+    <NavigationProperty Name="Project1" Relationship="Self.FK_teacher_Project" FromRole="teacher" ToRole="Project" />
+    <NavigationProperty Name="Schedule" Relationship="Self.FK_teacher_Schedule" FromRole="teacher" ToRole="Schedule" />
+    <NavigationProperty Name="users" Relationship="Self.FK__teacher__uid__628FA481" FromRole="teacher" ToRole="users" />
+    <NavigationProperty Name="TechnologyExpert" Relationship="Self.FK__TechnologyE__tid__6EF57B66" FromRole="teacher" ToRole="TechnologyExpert" />
+    <NavigationProperty Name="teacher1" Relationship="Self.FK_group_teacher" FromRole="teacher" ToRole="teacher1" />
+    <NavigationProperty Name="teacher2" Relationship="Self.FK_group_teacher" FromRole="teacher1" ToRole="teacher" />
+    <NavigationProperty Name="Technology" Relationship="Self.FK_teacher_Technology" FromRole="teacher" ToRole="Technology" />
+  </EntityType>
+  <EntityType Name="Technology">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="teacher" Relationship="Self.FK_teacher_Technology" FromRole="Technology" ToRole="teacher" />
+    <NavigationProperty Name="TechnologyExpert" Relationship="Self.FK__Technolog__tecId__6E01572D" FromRole="Technology" ToRole="TechnologyExpert" />
+  </EntityType>
+  <EntityType Name="TechnologyExpert">
+    <Key>
+      <PropertyRef Name="TechId" />
+    </Key>
+    <Property Name="TechId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="teacher" Relationship="Self.FK__TechnologyE__tid__6EF57B66" FromRole="TechnologyExpert" ToRole="teacher" />
+    <NavigationProperty Name="Technology" Relationship="Self.FK__Technolog__tecId__6E01572D" FromRole="TechnologyExpert" ToRole="Technology" />
+    <NavigationProperty Name="users" Relationship="Self.FK__TechnologyE__uid__6D0D32F4" FromRole="TechnologyExpert" ToRole="users" />
+  </EntityType>
+  <EntityType Name="TimeSlots">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="start_time" Type="Time" Precision="7" />
+    <Property Name="end_time" Type="Time" Precision="7" />
+    <Property Name="available" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Schedule" Relationship="Self.FK_Schedule_TimeSlots" FromRole="TimeSlots" ToRole="Schedule" />
+  </EntityType>
+  <EntityType Name="users">
+    <Key>
+      <PropertyRef Name="uid" />
+    </Key>
+    <Property Name="uid" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="username" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="role" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="AppointmentRequests" Relationship="Self.FK__Appointme__Reque__7C4F7684" FromRole="users" ToRole="AppointmentRequests" />
+    <NavigationProperty Name="group" Relationship="Self.FK__group__Created_b__5FB337D6" FromRole="users" ToRole="group" />
+    <NavigationProperty Name="Schedule" Relationship="Self.FK__Schedule__uid__778AC167" FromRole="users" ToRole="Schedule" />
+    <NavigationProperty Name="Student" Relationship="Self.FK__Student__uid__5CD6CB2B" FromRole="users" ToRole="Student" />
+    <NavigationProperty Name="teacher" Relationship="Self.FK__teacher__uid__628FA481" FromRole="users" ToRole="teacher" />
+    <NavigationProperty Name="TechnologyExpert" Relationship="Self.FK__TechnologyE__uid__6D0D32F4" FromRole="users" ToRole="TechnologyExpert" />
+  </EntityType>
+  <Association Name="FK__Appointme__Reque__7C4F7684">
+    <End Role="users" Type="Self.users" Multiplicity="0..1" />
+    <End Role="AppointmentRequests" Type="Self.AppointmentRequests" Multiplicity="*" />
+  </Association>
+  <Association Name="FK__Appointme__Sch_i__7D439ABD">
+    <End Role="Schedule" Type="Self.Schedule" Multiplicity="0..1" />
+    <End Role="AppointmentRequests" Type="Self.AppointmentRequests" Multiplicity="*" />
+  </Association>
+  <Association Name="FK__group__Created_b__5FB337D6">
+    <End Role="users" Type="Self.users" Multiplicity="0..1" />
+    <End Role="group" Type="Self.group" Multiplicity="*" />
+  </Association>
+  <Association Name="FK__teacher__gid__6383C8BA">
+    <End Role="group" Type="Self.group" Multiplicity="0..1" />
+    <End Role="teacher" Type="Self.teacher" Multiplicity="*" />
+  </Association>
+  <Association Name="Fk_Project_group">
+    <End Role="group" Type="Self.group" Multiplicity="0..1" />
+    <End Role="Project" Type="Self.Project" Multiplicity="*" />
+  </Association>
+  <Association Name="FK__Project__tid__71D1E811">
+    <End Role="teacher" Type="Self.teacher" Multiplicity="0..1" />
+    <End Role="Project" Type="Self.Project" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_teacher_Project">
+    <End Role="Project" Type="Self.Project" Multiplicity="0..1" />
+    <End Role="teacher" Type="Self.teacher" Multiplicity="*" />
+  </Association>
+  <Association Name="FK__Schedule__uid__778AC167">
+    <End Role="users" Type="Self.users" Multiplicity="0..1" />
+    <End Role="Schedule" Type="Self.Schedule" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_Schedule_TimeSlots">
+    <End Role="TimeSlots" Type="Self.TimeSlots" Multiplicity="0..1" />
+    <End Role="Schedule" Type="Self.Schedule" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_teacher_Schedule">
+    <End Role="Schedule" Type="Self.Schedule" Multiplicity="0..1" />
+    <End Role="teacher" Type="Self.teacher" Multiplicity="*" />
+  </Association>
+  <Association Name="FK__Student__uid__5CD6CB2B">
+    <End Role="users" Type="Self.users" Multiplicity="0..1" />
+    <End Role="Student" Type="Self.Student" Multiplicity="*" />
+  </Association>
+  <Association Name="FK__teacher__uid__628FA481">
+    <End Role="users" Type="Self.users" Multiplicity="0..1" />
+    <End Role="teacher" Type="Self.teacher" Multiplicity="*" />
+  </Association>
+  <Association Name="FK__TechnologyE__tid__6EF57B66">
+    <End Role="teacher" Type="Self.teacher" Multiplicity="0..1" />
+    <End Role="TechnologyExpert" Type="Self.TechnologyExpert" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_group_teacher">
+    <End Role="teacher" Type="Self.teacher" Multiplicity="1" />
+    <End Role="teacher1" Type="Self.teacher" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="teacher">
+        <PropertyRef Name="tid" />
+      </Principal>
+      <Dependent Role="teacher1">
+        <PropertyRef Name="tid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_teacher_Technology">
+    <End Role="Technology" Type="Self.Technology" Multiplicity="0..1" />
+    <End Role="teacher" Type="Self.teacher" Multiplicity="*" />
+  </Association>
+  <Association Name="FK__Technolog__tecId__6E01572D">
+    <End Role="Technology" Type="Self.Technology" Multiplicity="0..1" />
+    <End Role="TechnologyExpert" Type="Self.TechnologyExpert" Multiplicity="*" />
+  </Association>
+  <Association Name="FK__TechnologyE__uid__6D0D32F4">
+    <End Role="users" Type="Self.users" Multiplicity="0..1" />
+    <End Role="TechnologyExpert" Type="Self.TechnologyExpert" Multiplicity="*" />
+  </Association>
+  <EntityContainer Name="OfficialSASEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="AppointmentRequests" EntityType="Self.AppointmentRequests" />
+    <EntitySet Name="group" EntityType="Self.group" />
+    <EntitySet Name="Project" EntityType="Self.Project" />
+    <EntitySet Name="Schedule" EntityType="Self.Schedule" />
+    <EntitySet Name="Student" EntityType="Self.Student" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="teacher" EntityType="Self.teacher" />
+    <EntitySet Name="Technology" EntityType="Self.Technology" />
+    <EntitySet Name="TechnologyExpert" EntityType="Self.TechnologyExpert" />
+    <EntitySet Name="TimeSlots" EntityType="Self.TimeSlots" />
+    <EntitySet Name="users" EntityType="Self.users" />
+    <AssociationSet Name="FK__Appointme__Reque__7C4F7684" Association="Self.FK__Appointme__Reque__7C4F7684">
+      <End Role="users" EntitySet="users" />
+      <End Role="AppointmentRequests" EntitySet="AppointmentRequests" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Appointme__Sch_i__7D439ABD" Association="Self.FK__Appointme__Sch_i__7D439ABD">
+      <End Role="Schedule" EntitySet="Schedule" />
+      <End Role="AppointmentRequests" EntitySet="AppointmentRequests" />
+    </AssociationSet>
+    <AssociationSet Name="FK__group__Created_b__5FB337D6" Association="Self.FK__group__Created_b__5FB337D6">
+      <End Role="users" EntitySet="users" />
+      <End Role="group" EntitySet="group" />
+    </AssociationSet>
+    <AssociationSet Name="FK__teacher__gid__6383C8BA" Association="Self.FK__teacher__gid__6383C8BA">
+      <End Role="group" EntitySet="group" />
+      <End Role="teacher" EntitySet="teacher" />
+    </AssociationSet>
+    <AssociationSet Name="Fk_Project_group" Association="Self.Fk_Project_group">
+      <End Role="group" EntitySet="group" />
+      <End Role="Project" EntitySet="Project" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Project__tid__71D1E811" Association="Self.FK__Project__tid__71D1E811">
+      <End Role="teacher" EntitySet="teacher" />
+      <End Role="Project" EntitySet="Project" />
+    </AssociationSet>
+    <AssociationSet Name="FK_teacher_Project" Association="Self.FK_teacher_Project">
+      <End Role="Project" EntitySet="Project" />
+      <End Role="teacher" EntitySet="teacher" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Schedule__uid__778AC167" Association="Self.FK__Schedule__uid__778AC167">
+      <End Role="users" EntitySet="users" />
+      <End Role="Schedule" EntitySet="Schedule" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Schedule_TimeSlots" Association="Self.FK_Schedule_TimeSlots">
+      <End Role="TimeSlots" EntitySet="TimeSlots" />
+      <End Role="Schedule" EntitySet="Schedule" />
+    </AssociationSet>
+    <AssociationSet Name="FK_teacher_Schedule" Association="Self.FK_teacher_Schedule">
+      <End Role="Schedule" EntitySet="Schedule" />
+      <End Role="teacher" EntitySet="teacher" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Student__uid__5CD6CB2B" Association="Self.FK__Student__uid__5CD6CB2B">
+      <End Role="users" EntitySet="users" />
+      <End Role="Student" EntitySet="Student" />
+    </AssociationSet>
+    <AssociationSet Name="FK__teacher__uid__628FA481" Association="Self.FK__teacher__uid__628FA481">
+      <End Role="users" EntitySet="users" />
+      <End Role="teacher" EntitySet="teacher" />
+    </AssociationSet>
+    <AssociationSet Name="FK__TechnologyE__tid__6EF57B66" Association="Self.FK__TechnologyE__tid__6EF57B66">
+      <End Role="teacher" EntitySet="teacher" />
+      <End Role="TechnologyExpert" EntitySet="TechnologyExpert" />
+    </AssociationSet>
+    <AssociationSet Name="FK_group_teacher" Association="Self.FK_group_teacher">
+      <End Role="teacher" EntitySet="teacher" />
+      <End Role="teacher1" EntitySet="teacher" />
+    </AssociationSet>
+    <AssociationSet Name="FK_teacher_Technology" Association="Self.FK_teacher_Technology">
+      <End Role="Technology" EntitySet="Technology" />
+      <End Role="teacher" EntitySet="teacher" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Technolog__tecId__6E01572D" Association="Self.FK__Technolog__tecId__6E01572D">
+      <End Role="Technology" EntitySet="Technology" />
+      <End Role="TechnologyExpert" EntitySet="TechnologyExpert" />
+    </AssociationSet>
+    <AssociationSet Name="FK__TechnologyE__uid__6D0D32F4" Association="Self.FK__TechnologyE__uid__6D0D32F4">
+      <End Role="users" EntitySet="users" />
+      <End Role="TechnologyExpert" EntitySet="TechnologyExpert" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
