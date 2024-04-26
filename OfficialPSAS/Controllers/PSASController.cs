@@ -110,7 +110,7 @@ namespace OfficialPSAS.Controllers
                     }
                     else
                     {
-                        return Request.CreateResponse( findingUser);
+                        return Request.CreateResponse(findingUser);
                     }
                 }else
                 {
