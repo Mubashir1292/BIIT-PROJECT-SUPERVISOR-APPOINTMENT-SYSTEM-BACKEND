@@ -8,7 +8,6 @@ using OfficialPSAS.Models;
 using System.Web;
 using Newtonsoft.Json;
 using System.Web.Http.Cors;
-using System.Text;
 
 namespace OfficialPSAS.Controllers
 {
@@ -16,7 +15,7 @@ namespace OfficialPSAS.Controllers
     public class PSASController : ApiController
     {
 
-        OfficialSASEntities28 db = new OfficialSASEntities28();
+        OfficialSASEntities29 db = new OfficialSASEntities29();
         /*public string  CheckForTechnicalExpert(string tid)
         {
             var teacherAndTechnicalExpertSame = from t in db.teacher
@@ -1564,8 +1563,8 @@ namespace OfficialPSAS.Controllers
                         {
                             gr.group = groupFinding;
                             gr.message_body = message;
-                            gr.users = findingStudent;
-                            gr.users1 = findingAdmin;
+                            gr.users = findingAdmin;
+                            gr.users1 = findingStudent;
                             gr.status = 0;
                             gr.Technology = technologyFinding;
                             gr.datetime = DateTime.Now;
@@ -1580,7 +1579,7 @@ namespace OfficialPSAS.Controllers
                     }
                     else
                     {
-                        return Request.CreateResponse("You are joined with a group");
+                        return Request.CreateResponse("You are Already joined with a group");
                     }
                 }
                 else
@@ -1592,34 +1591,184 @@ namespace OfficialPSAS.Controllers
                 return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
             }
         }
-
-
-
-
-
-
-        //--------------------------Commettiee Panel
+        /*Getting the Notifications*/
         [HttpGet]
-        public IHttpActionResult GetNotification()
+        public HttpResponseMessage AllNotificationsForStudent(string regNo) 
         {
-
-            db.Configuration.ProxyCreationEnabled = false;
-
             try
             {
+                var isStudent = db.Student.Where(s => s.st_id == regNo).FirstOrDefault();
+                if(isStudent != null)
+                {
+                        /*Fetching all Group Request*/
+                    var AllGroupRequests = db.groupRequests.Where(s => s.users.uid == regNo).Select(s => new
+                    {
+                        group=new
+                        {
+                            s.group.title,
+                            s.group.gid,                            
+                        },
+                        message = new
+                        {
+                            s.message_body,                                                        
+                        },
+                        technology=new
+                        {
+                            s.Technology.id,
+                            s.Technology.name,
+                        }
+                    }).ToList();
 
-                var notification = db.Project.Where(item => item.status == 0 && !String.IsNullOrEmpty(item.users.uid)).Select(s=>new {
-                 s.users.uid,
-                 s.users.username,
-                 s.title,                
-                }).ToList();                               
-                return Ok(notification);
-            }
-            catch (Exception cp)
+                }
+                return Request.CreateResponse("");
+            }catch(Exception cp)
             {
-                return Ok(cp.Message);
+                return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
+            }
+
+        }
+
+            
+
+
+        //* Project Commetiee Panel*/
+        /*------------------Getting the Student Requests for group Joining------------------------*/
+        [HttpGet]
+        public HttpResponseMessage AllStudentRequestsOfGroupjoining(string com_id)
+        {
+            try
+            {
+                var user = db.users.Where(s => s.uid == com_id).FirstOrDefault();
+                var response = new object();
+                List<groupMembersDetails> allGroupMembers = new List<groupMembersDetails>();
+                if (user != null)
+                {
+                   var AllRequests=db.groupRequests.Where(s=>s.users.uid==com_id).Select(s=>new {                                       
+                                           s.message_id,
+                                           s.message_body,
+                                           s.Technology.name,
+                                           s.users.uid,
+                                           s.@group.gid,
+                                       }).Distinct().ToList();
+                    if (AllRequests.Count >0)
+                    {
+
+                        foreach(var i in AllRequests)
+                        {
+                            var fetchingGroupDetails = db.GroupMember.Where(s => s.group.gid == i.gid).Select(s => new
+                            {
+                                s.st_id,
+                                s.Student.users.username,
+                                s.Technology.name,
+                                s.Student.cgpa,
+                                s.Student.Grade,
+                                s.Student.semester,
+                                s.Student.section,
+                            }).Distinct().ToList();
+                            if (fetchingGroupDetails != null)
+                            {
+                                foreach (var j in fetchingGroupDetails)
+                                {
+                                    groupMembersDetails gm = new groupMembersDetails();
+                                    gm.st_id = j.st_id;
+                                    gm.name = j.name;
+                                    gm.technology = j.username;
+                                    gm.cgpa = (double)j.cgpa;
+                                    gm.grade = j.Grade;
+                                    gm.semester = j.semester;
+                                    gm.section = j.section;
+                                    allGroupMembers.Add(gm);
+                                }
+                            }
+                        }
+                        response = new
+                        {
+                            AllRequests,
+                            allGroupMembers
+                        };
+                     return Request.CreateResponse(response);
+                    }
+                }
+                return Request.CreateResponse("");
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
             }
         }
+        /*----------------------------===============Fetching the group details which does'nt have particular technology group Member=================-----------------------------------*/
+        [HttpGet]
+        public HttpResponseMessage FetchingProjectDetails(string st_id)
+        {
+            try
+            {
+                var student = db.Student.Where(s => s.st_id == st_id).FirstOrDefault();
+                if (student != null)
+                {
+                    var checkingGroupStatus = db.GroupMember.Where(s => s.st_id == st_id).FirstOrDefault();
+                    if (checkingGroupStatus == null)
+                    {
+                       var projectList = db.Project.Where(s => s.thresholdCgpa <= student.cgpa && s.status != 0).Select(s => new
+                        {
+                            s.pid,
+                            s.thresholdCgpa,
+                            s.title,
+                            s.description,
+                            s.projectDomain.name,
+                            teacher = new
+                            {
+                                s.teacher.tid,
+                                s.teacher.users.username
+                            },
+                        }).Distinct().ToList();
+                        return Request.CreateResponse(projectList);
+                    }
+                    else
+                    {
+                        return Request.CreateResponse("Already Group Joined");
+                    }
+                }
+                else
+                    return Request.CreateResponse("Student Not Founded");
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
+            }
+        }
+        /*--------------------------====================== * * Getting the Details of group(project)* *  =====================-------------------------*/
+        [HttpGet]
+        public HttpResponseMessage FetchingGroupDetailsOverProjectTitle(int pid)
+        {
+            try
+            {
+                var project = db.Project.Where(s => s.pid == pid).FirstOrDefault();
+                List<groupMembersDetails> allGroupMembersDetails = new List<groupMembersDetails>();
+                if (project != null)
+                {
+                    var findingGroupMembers = db.GroupMember.Where(s => s.group.gid == project.group.gid).Select(s => new
+                    {
+                        s.st_id,
+                        s.Student.users.username,
+                        s.Technology.name,
+                        s.Student.cgpa,
+                        s.Student.Grade,
+                        s.Student.semester,
+                        s.Student.section,
+                        
+                    }).ToList();
+                    return Request.CreateResponse(findingGroupMembers);
+                }
+                else
+                    return Request.CreateResponse("");
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message+":"+cp.InnerException);
+            }
+        }
+        
+        /*---------------------==========Getting all the supervisor Requests==========---------------------*/
+        
+
+
 
 
 

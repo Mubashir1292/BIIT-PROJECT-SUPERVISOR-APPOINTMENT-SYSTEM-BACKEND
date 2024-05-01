@@ -13,10 +13,10 @@ namespace OfficialPSAS.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class OfficialSASEntities28 : DbContext
+    public partial class OfficialSASEntities29 : DbContext
     {
-        public OfficialSASEntities28()
-            : base("name=OfficialSASEntities28")
+        public OfficialSASEntities29()
+            : base("name=OfficialSASEntities29")
         {
         }
     
@@ -29,11 +29,14 @@ namespace OfficialPSAS.Models
         public virtual DbSet<group> group { get; set; }
         public virtual DbSet<GroupMember> GroupMember { get; set; }
         public virtual DbSet<groupRequests> groupRequests { get; set; }
+        public virtual DbSet<Meeting> Meeting { get; set; }
         public virtual DbSet<Project> Project { get; set; }
         public virtual DbSet<projectDomain> projectDomain { get; set; }
         public virtual DbSet<projectRequests> projectRequests { get; set; }
         public virtual DbSet<Schedule> Schedule { get; set; }
         public virtual DbSet<Student> Student { get; set; }
+        public virtual DbSet<Task> Task { get; set; }
+        public virtual DbSet<TaskProgress> TaskProgress { get; set; }
         public virtual DbSet<teacher> teacher { get; set; }
         public virtual DbSet<TechnicalExpertTechnology> TechnicalExpertTechnology { get; set; }
         public virtual DbSet<Technology> Technology { get; set; }

@@ -4,22 +4,25 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="5918e6eb564b43b8894293adf7048fca" Name="Diagram1">
-        <EntityTypeShape EntityType="OfficialSASModel.AppointmentRequests" Width="1.5" PointX="3" PointY="8.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.group" Width="1.5" PointX="3" PointY="11.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.GroupMember" Width="1.5" PointX="5.25" PointY="14.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.groupRequests" Width="1.5" PointX="5.25" PointY="10.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.Project" Width="1.5" PointX="8.25" PointY="11.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.projectDomain" Width="1.5" PointX="6" PointY="17.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.projectRequests" Width="1.5" PointX="13.5" PointY="10.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.Schedule" Width="1.5" PointX="10.5" PointY="7.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.Student" Width="1.5" PointX="3" PointY="16.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.teacher" Width="1.5" PointX="8.25" PointY="7.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.TechnicalExpertTechnology" Width="1.5" PointX="12.75" PointY="13.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.Technology" Width="1.5" PointX="6" PointY="6.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.TechnologyExpert" Width="1.5" PointX="10.5" PointY="11.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.TimeSlots" Width="1.5" PointX="8.25" PointY="4.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.users" Width="1.5" PointX="0.75" PointY="10.5" IsExpanded="true" />
+      <Diagram DiagramId="2295f2c8fcf74358a181973b77bd6882" Name="Diagram1">
+        <EntityTypeShape EntityType="OfficialSASModel.AppointmentRequests" Width="1.5" PointX="3" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.group" Width="1.5" PointX="3" PointY="13.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.GroupMember" Width="1.5" PointX="5.25" PointY="16" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.groupRequests" Width="1.5" PointX="5.25" PointY="12.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.Meeting" Width="1.5" PointX="12.75" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.Project" Width="1.5" PointX="8.25" PointY="13.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.projectDomain" Width="1.5" PointX="6" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.projectRequests" Width="1.5" PointX="13.5" PointY="12.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.Schedule" Width="1.5" PointX="10.5" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.Student" Width="1.5" PointX="3" PointY="18" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.Task" Width="1.5" PointX="5.25" PointY="23.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.TaskProgress" Width="1.5" PointX="7.5" PointY="20" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.teacher" Width="1.5" PointX="8.25" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.TechnicalExpertTechnology" Width="1.5" PointX="12.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.Technology" Width="1.5" PointX="6" PointY="8.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.TechnologyExpert" Width="1.5" PointX="10.5" PointY="13.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.TimeSlots" Width="1.5" PointX="8.25" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.users" Width="1.5" PointX="0.75" PointY="12.25" IsExpanded="true" />
         <AssociationConnector Association="OfficialSASModel.FK__Appointme__Reque__7C4F7684" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK__Appointme__Sch_i__7D439ABD" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK__group__Created_b__5FB337D6" ManuallyRouted="false" />
@@ -27,12 +30,16 @@
         <AssociationConnector Association="OfficialSASModel.FK__groupReques__gid__6CA31EA0" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK__Project__gid__09746778" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK__projectRequ__gid__41B8C09B" ManuallyRouted="false" />
+        <AssociationConnector Association="OfficialSASModel.FK__Task__gid__7EC1CEDB" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK__teacher__gid__6383C8BA" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK__GroupMemb__st_id__625A9A57" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK__GroupMemb__tecId__6442E2C9" ManuallyRouted="false" />
+        <AssociationConnector Association="OfficialSASModel.FK__TaskProgr__grpMe__02925FBF" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK__Message__receive__681373AD" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK__Message__sender__671F4F74" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK__Message__tecId__73852659" ManuallyRouted="false" />
+        <AssociationConnector Association="OfficialSASModel.FK__Meeting__created__7BE56230" ManuallyRouted="false" />
+        <AssociationConnector Association="OfficialSASModel.FK__Meeting__Sch_id__7AF13DF7" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK__Project__p_Domai__1C873BEC" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK__Project__request__2CBDA3B5" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK__Project__tid__0880433F" ManuallyRouted="false" />
@@ -42,6 +49,7 @@
         <AssociationConnector Association="OfficialSASModel.FK__Schedule__tid__6ABAD62E" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK_teacher_Schedule" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK__Student__uid__5CD6CB2B" ManuallyRouted="false" />
+        <AssociationConnector Association="OfficialSASModel.FK__TaskProgr__task___019E3B86" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK__teacher__uid__628FA481" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK__TechnologyE__tid__589C25F3" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK_teacher_Technology" ManuallyRouted="false" />

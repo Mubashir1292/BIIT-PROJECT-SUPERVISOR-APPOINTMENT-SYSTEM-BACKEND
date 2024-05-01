@@ -114,15 +114,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="Models\sas.Context.tt">
+    <Content Include="Models\psas.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>sas.edmx</DependentUpon>
-      <LastGenOutput>sas.Context.cs</LastGenOutput>
+      <DependentUpon>psas.edmx</DependentUpon>
+      <LastGenOutput>psas.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\sas.tt">
+    <Content Include="Models\psas.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>sas.edmx</DependentUpon>
-      <LastGenOutput>sas.cs</LastGenOutput>
+      <DependentUpon>psas.edmx</DependentUpon>
+      <LastGenOutput>psas.cs</LastGenOutput>
     </Content>
     <Content Include="Web.config" />
   </ItemGroup>
@@ -133,76 +133,86 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AppointmentRequests.cs">
-      <DependentUpon>sas.tt</DependentUpon>
+      <DependentUpon>psas.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\group.cs">
-      <DependentUpon>sas.tt</DependentUpon>
+      <DependentUpon>psas.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\groupDetailsFor.cs" />
     <Compile Include="Models\GroupMember.cs">
-      <DependentUpon>sas.tt</DependentUpon>
+      <DependentUpon>psas.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\groupMembersDetails.cs" />
     <Compile Include="Models\groupRequests.cs">
-      <DependentUpon>sas.tt</DependentUpon>
+      <DependentUpon>psas.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Meeting.cs">
+      <DependentUpon>psas.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Project.cs">
-      <DependentUpon>sas.tt</DependentUpon>
+      <DependentUpon>psas.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\projectDomain.cs">
-      <DependentUpon>sas.tt</DependentUpon>
+      <DependentUpon>psas.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProjectList.cs" />
     <Compile Include="Models\projectRequests.cs">
-      <DependentUpon>sas.tt</DependentUpon>
+      <DependentUpon>psas.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\sas.Context.cs">
+    <Compile Include="Models\psas.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>sas.Context.tt</DependentUpon>
+      <DependentUpon>psas.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\sas.cs">
+    <Compile Include="Models\psas.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>sas.tt</DependentUpon>
+      <DependentUpon>psas.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\sas.Designer.cs">
+    <Compile Include="Models\psas.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>sas.edmx</DependentUpon>
+      <DependentUpon>psas.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\Schedule.cs">
-      <DependentUpon>sas.tt</DependentUpon>
+      <DependentUpon>psas.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Student.cs">
-      <DependentUpon>sas.tt</DependentUpon>
+      <DependentUpon>psas.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Task.cs">
+      <DependentUpon>psas.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TaskProgress.cs">
+      <DependentUpon>psas.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\teacher.cs">
-      <DependentUpon>sas.tt</DependentUpon>
+      <DependentUpon>psas.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TechnicalExpertTechnology.cs">
-      <DependentUpon>sas.tt</DependentUpon>
+      <DependentUpon>psas.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Technology.cs">
-      <DependentUpon>sas.tt</DependentUpon>
+      <DependentUpon>psas.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TechnologyExpert.cs">
-      <DependentUpon>sas.tt</DependentUpon>
+      <DependentUpon>psas.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TimeSlots.cs">
-      <DependentUpon>sas.tt</DependentUpon>
+      <DependentUpon>psas.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\users.cs">
-      <DependentUpon>sas.tt</DependentUpon>
+      <DependentUpon>psas.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EntityDeploy Include="Models\sas.edmx">
+    <EntityDeploy Include="Models\psas.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>sas.Designer.cs</LastGenOutput>
+      <LastGenOutput>psas.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\sas.edmx.diagram">
-      <DependentUpon>sas.edmx</DependentUpon>
+    <Content Include="Models\psas.edmx.diagram">
+      <DependentUpon>psas.edmx</DependentUpon>
     </Content>
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
