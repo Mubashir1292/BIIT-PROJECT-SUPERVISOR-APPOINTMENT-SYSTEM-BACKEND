@@ -15,5 +15,6 @@ namespace OfficialPSAS.Models
         public string semester { get; set; }
         public string section { get; set; }
 
+
     }
 }

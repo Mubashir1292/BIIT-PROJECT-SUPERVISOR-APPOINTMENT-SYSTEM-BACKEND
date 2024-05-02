@@ -1697,38 +1697,73 @@ namespace OfficialPSAS.Controllers
         }
         /*----------------------------===============Fetching the group details which does'nt have particular technology group Member=================-----------------------------------*/
         [HttpGet]
-        public HttpResponseMessage FetchingProjectDetails(string st_id)
+        public HttpResponseMessage FetchingProjectDetails(string st_id,string technology)
         {
             try
             {
+                /* Fetching the details of groups */
                 var student = db.Student.Where(s => s.st_id == st_id).FirstOrDefault();
+                List<groupMembersDetails> allGroupMembers = new List<groupMembersDetails>();
+                var response = new object();
                 if (student != null)
                 {
-                    var checkingGroupStatus = db.GroupMember.Where(s => s.st_id == st_id).FirstOrDefault();
-                    if (checkingGroupStatus == null)
+                    /*  Checking Group Details    */
+                    var groupStatus = db.GroupMember.Where(s => s.st_id == student.st_id).FirstOrDefault();
+                    if (groupStatus == null)
                     {
-                       var projectList = db.Project.Where(s => s.thresholdCgpa <= student.cgpa && s.status != 0).Select(s => new
+                        var projectList = db.Project.Where(s => s.thresholdCgpa <= student.cgpa && s.group.gid != 0 && !s.group.gid.Equals(null)).ToList();
+                        if (projectList.Count > 0)
                         {
-                            s.pid,
-                            s.thresholdCgpa,
-                            s.title,
-                            s.description,
-                            s.projectDomain.name,
-                            teacher = new
+                            foreach (var i in projectList)
                             {
-                                s.teacher.tid,
-                                s.teacher.users.username
-                            },
-                        }).Distinct().ToList();
-                        return Request.CreateResponse(projectList);
+                                bool skipGroup = false;
+                                var groupMembers = db.GroupMember.Where(s => s.group.gid == i.group.gid).Distinct().ToList();
+                                if (groupMembers.Count > 0)
+                                {
+                                    foreach (var member in groupMembers)
+                                    {
+                                        if (member.Technology.name == technology)
+                                        {
+                                            skipGroup = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!skipGroup)
+                                    {
+                                        foreach (var j in groupMembers)
+                                        {
+                                            groupMembersDetails gm = new groupMembersDetails();
+                                            gm.st_id = j.st_id;
+                                            gm.name = j.Student.users.username;
+                                            gm.technology = j.Technology.name;
+                                            gm.cgpa = (double)j.Student.cgpa;
+                                            gm.grade = j.Student.Grade;
+                                            gm.semester = j.Student.semester;
+                                            gm.section = j.Student.section;
+                                            allGroupMembers.Add(gm);
+                                        }
+                                    }
+                                }
+                                if (!skipGroup)
+                                {
+                                response = new
+                                {
+                                    i.pid,
+                                    i.title,
+                                    i.teacher.tid,
+                                    i.teacher.users.username,
+                                    i.description,
+                                    allGroupMembers
+                                };
+                                }
+                            }
+                            return Request.CreateResponse(response);
+                        }
+                        else return Request.CreateResponse("Not Found Any Project");
                     }
-                    else
-                    {
-                        return Request.CreateResponse("Already Group Joined");
-                    }
+                    else return Request.CreateResponse("Already Joined a group");
                 }
-                else
-                    return Request.CreateResponse("Student Not Founded");
+                else return Request.CreateResponse("not founded any student");
             }catch(Exception cp)
             {
                 return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
