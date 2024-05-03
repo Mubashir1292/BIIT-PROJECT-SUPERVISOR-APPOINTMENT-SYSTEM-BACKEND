@@ -1799,7 +1799,73 @@ namespace OfficialPSAS.Controllers
                 return Request.CreateResponse(cp.Message+":"+cp.InnerException);
             }
         }
-        
+         /*------------------------------=============   Allow to join   ================----------------------------------*/
+        [HttpPost]
+        public HttpResponseMessage AddStudentToGroup(string st_id,int group_id,string technology)
+        {
+            try
+            {
+                var isStudent = db.Student.Where(s => s.st_id == st_id).FirstOrDefault();
+                if (isStudent != null)
+                {
+                    //checking technology 
+                    var isTechnology = db.Technology.Where(s => s.name == technology).FirstOrDefault();
+                    if (isTechnology != null)
+                    {
+                        // check group status 
+                        var isGroupMember = db.GroupMember.Where(s => s.st_id == isStudent.st_id).FirstOrDefault();
+                        if (isGroupMember == null)
+                        {
+                            //checking the group existence
+                            var isGroup = db.group.Where(s => s.gid == group_id).FirstOrDefault();
+                            if (isGroup != null)
+                            {
+                                // Adding a new GroupMember
+                                GroupMember gm = new GroupMember();
+                                gm.st_id = isStudent.st_id;
+                                gm.group = isGroup;
+                                gm.Technology = isTechnology;
+                                db.GroupMember.Add(gm);
+                                db.SaveChanges();
+                            }
+                            else return Request.CreateResponse("Group Not Founded");
+                        }
+                        else return Request.CreateResponse("Already Group Joined");
+                    }
+                    else return Request.CreateResponse("Technology not founded");                    
+                }
+                return Request.CreateResponse("Added to group ");
+            }
+            catch (Exception cp)
+            {
+                return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
+            }
+        }
+        /*-------------------==============   Getting the Details of Project Allocation Request     ===================---------------------------------*/
+        [HttpGet]
+        public HttpResponseMessage GettingDetailsOfSupervisionProjectRequest(int requestId)
+        {
+            try
+            {
+                var response = new object();
+                var isRequest = db.projectRequests.Where(s => s.req_id == requestId && s.status == 1).FirstOrDefault();
+                if (isRequest != null)
+                {
+                    var supervisor = db.teacher.Where(s => s.tid == isRequest.teacher.tid).FirstOrDefault();
+                    if (supervisor != null)
+                    {
+                        
+                    }
+                }
+
+                return Request.CreateResponse("");
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message+":"+cp.InnerException);
+            }
+        }
+
+
         /*---------------------==========Getting all the supervisor Requests==========---------------------*/
         
 
