@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities29">
+  <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities30">
     <EntitySetMapping Name="AppointmentRequests">
       <EntityTypeMapping TypeName="OfficialSASModel.AppointmentRequests">
         <MappingFragment StoreEntitySet="AppointmentRequests">
@@ -98,6 +98,24 @@
           <ScalarProperty Name="cgpa" ColumnName="cgpa" />
           <ScalarProperty Name="Grade" ColumnName="Grade" />
           <ScalarProperty Name="image" ColumnName="image" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SupervisorGroupConnection">
+      <EntityTypeMapping TypeName="OfficialSASModel.SupervisorGroupConnection">
+        <MappingFragment StoreEntitySet="SupervisorGroupConnection">
+          <ScalarProperty Name="s_id" ColumnName="s_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sysdiagrams">
+      <EntityTypeMapping TypeName="OfficialSASModel.sysdiagrams">
+        <MappingFragment StoreEntitySet="sysdiagrams">
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+          <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="definition" ColumnName="definition" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -229,6 +247,15 @@
       </EndProperty>
       <EndProperty Name="projectRequests">
         <ScalarProperty Name="req_id" ColumnName="req_id" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="gid" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__SupervisorG__gid__0E04126B" TypeName="OfficialSASModel.FK__SupervisorG__gid__0E04126B" StoreEntitySet="SupervisorGroupConnection">
+      <EndProperty Name="group">
+        <ScalarProperty Name="gid" ColumnName="gid" />
+      </EndProperty>
+      <EndProperty Name="SupervisorGroupConnection">
+        <ScalarProperty Name="s_id" ColumnName="s_id" />
       </EndProperty>
       <Condition IsNull="false" ColumnName="gid" />
     </AssociationSetMapping>
@@ -393,6 +420,15 @@
         <ScalarProperty Name="st_id" ColumnName="st_id" />
       </EndProperty>
       <Condition IsNull="false" ColumnName="uid" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__SupervisorG__tid__0EF836A4" TypeName="OfficialSASModel.FK__SupervisorG__tid__0EF836A4" StoreEntitySet="SupervisorGroupConnection">
+      <EndProperty Name="teacher">
+        <ScalarProperty Name="tid" ColumnName="tid" />
+      </EndProperty>
+      <EndProperty Name="SupervisorGroupConnection">
+        <ScalarProperty Name="s_id" ColumnName="s_id" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="tid" />
     </AssociationSetMapping>
     <AssociationSetMapping Name="FK__TaskProgr__task___019E3B86" TypeName="OfficialSASModel.FK__TaskProgr__task___019E3B86" StoreEntitySet="TaskProgress">
       <EndProperty Name="Task">

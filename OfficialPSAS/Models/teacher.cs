@@ -20,6 +20,7 @@ namespace OfficialPSAS.Models
             this.Project = new HashSet<Project>();
             this.projectRequests = new HashSet<projectRequests>();
             this.Schedule = new HashSet<Schedule>();
+            this.SupervisorGroupConnection = new HashSet<SupervisorGroupConnection>();
             this.TechnologyExpert = new HashSet<TechnologyExpert>();
         }
     
@@ -34,6 +35,8 @@ namespace OfficialPSAS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Schedule> Schedule { get; set; }
         public virtual Schedule Schedule1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SupervisorGroupConnection> SupervisorGroupConnection { get; set; }
         public virtual users users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TechnologyExpert> TechnologyExpert { get; set; }

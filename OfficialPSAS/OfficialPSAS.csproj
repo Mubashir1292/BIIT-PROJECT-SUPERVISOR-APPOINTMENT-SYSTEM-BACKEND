@@ -180,6 +180,12 @@
     <Compile Include="Models\Student.cs">
       <DependentUpon>psas.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SupervisorGroupConnection.cs">
+      <DependentUpon>psas.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sysdiagrams.cs">
+      <DependentUpon>psas.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Task.cs">
       <DependentUpon>psas.tt</DependentUpon>
     </Compile>

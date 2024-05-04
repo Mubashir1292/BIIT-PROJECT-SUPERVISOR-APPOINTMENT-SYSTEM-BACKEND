@@ -15,7 +15,7 @@ namespace OfficialPSAS.Controllers
     public class PSASController : ApiController
     {
 
-        OfficialSASEntities29 db = new OfficialSASEntities29();
+        OfficialSASEntities30 db = new OfficialSASEntities30();
         /*public string  CheckForTechnicalExpert(string tid)
         {
             var teacherAndTechnicalExpertSame = from t in db.teacher
@@ -1849,27 +1849,170 @@ namespace OfficialPSAS.Controllers
             {
                 var response = new object();
                 var isRequest = db.projectRequests.Where(s => s.req_id == requestId && s.status == 1).FirstOrDefault();
+                List<groupMembersDetails> allGroupMembers = new List<groupMembersDetails>();
                 if (isRequest != null)
                 {
+                    // checking group details
+                    var groupMembers = db.GroupMember.Where(s => s.group.gid == isRequest.group.gid).Distinct().ToList();
+                    if (groupMembers.Count > 0)
+                    {
+                        foreach(var i in groupMembers)
+                        {
+                            groupMembersDetails gm = new groupMembersDetails();
+                            gm.st_id = i.st_id;
+                            gm.name = i.Student.users.username;
+                            gm.technology = i.Technology.name;
+                            gm.cgpa = (double)i.Student.cgpa;
+                            gm.grade = i.Student.Grade;
+                            gm.semester = i.Student.semester;
+                            gm.section = i.Student.section;
+                            allGroupMembers.Add(gm);
+                        }
+                    }
                     var supervisor = db.teacher.Where(s => s.tid == isRequest.teacher.tid).FirstOrDefault();
                     if (supervisor != null)
                     {
-                        
+                        // fetching all already Allocated Projects
+                        var allAllocatedProjects = db.Project.Where(s => s.teacher.tid == supervisor.tid && s.status == 1).Select(s => new
+                        {
+                            s.group.gid,
+                            s.pid,
+                            s.title,
+                            s.users.uid,
+                            s.users.username,
+                        }).Distinct().ToList();
+                        if (allAllocatedProjects != null)
+                        {
+                            response = new
+                            {
+                                groupRequestId=isRequest.req_id,
+                                allAllocatedProjects,
+                                supervisor = new {
+                                    supervisor.tid,
+                                    supervisor.users.username,
+                                },
+                                    allGroupMembers                                
+                            };
+                            return Request.CreateResponse(response);
+                        }
+                        else
+                        {
+                            return Request.CreateResponse("Not Founded Any Allocated project");
+                        }
                     }
-                }
+                    else
+                    {
+                        return Request.CreateResponse("Supervisor Not Founded");
+                    }
 
-                return Request.CreateResponse("");
+                }
+                else
+                {
+                    return Request.CreateResponse("Request not founded");
+                }
             }catch(Exception cp)
             {
                 return Request.CreateResponse(cp.Message+":"+cp.InnerException);
             }
         }
+        /*-------------------------------------====================  Allocate the project to Supervisor   =========================---------------------------*/
+        [HttpPost]
+        public HttpResponseMessage AllocateProjectToSupervisor(int project_id, int teacher_id, int group_id, int status,int requestId)
+        {
+            try
+            {
+                var projectRequest = db.projectRequests.Where(s => s.req_id == requestId).FirstOrDefault();
+                if (projectRequest.status == 1)
+                {
+                    // check the Project Allocation
+                    var project = db.Project.Where(s => s.pid == project_id && s.status != 1).FirstOrDefault();
+                    if (project != null)
+                    {
+                        // checking group's project status
+                        var group = db.group.Where(s => s.gid == group_id && (s.pid == 0 || s.pid == null)).FirstOrDefault();
+                        if (group != null)
+                        {
+                            // check teacher 
+                            var teacher = db.teacher.Where(s => s.tid == teacher_id).FirstOrDefault();
+                            if (teacher != null)
+                            {
+                                //check teacher group limit from SupervisorGroupConeection Table
+                                var projectsLimit = db.SupervisorGroupConnection.Where(s => s.teacher.tid == teacher.tid).Distinct().ToList();
+                                if (projectsLimit.Count < 5)
+                                {
+                                    //check status details
+                                    var groupStatus = db.group.Where(s => s.gid == group_id && (s.pid == null || s.pid == 0)).FirstOrDefault();
+                                    if (groupStatus != null)
+                                    {
+                                        // update request status
+                                        if (status == 1)
+                                        {
+                                            // Approving the status of project Request to 2 or -1
+                                            projectRequest.status = 2;
+                                            // Approving the status of group  in project's status
+                                            group.pid = project.pid;
+                                            // Approving the status in group table of Teacher's status
+                                            group.tid = teacher.tid;
+                                            // Approving the status of group,status in project table 
+                                            project.group = group;
+                                            // Approving the status in project table
+                                            project.status = 1;
+                                            // Approving the status of SupvisorGroupConnection
+                                            SupervisorGroupConnection sgc = new SupervisorGroupConnection();
+                                            sgc.group = group;
+                                            sgc.teacher = teacher;
+                                            db.SupervisorGroupConnection.Add(sgc);
+                                            // if all conditions satified
+                                            int RowsEffected = db.SaveChanges();
+                                            return Request.CreateResponse("Project Allocated to group " + RowsEffected);
+                                        }
+                                        else if (status == 0)
+                                        {
+                                            projectRequest.status = -1;
+                                            db.SaveChanges();
+                                            return Request.CreateResponse("Project Not Allocated to Supervisor");
+                                        }
+                                        else
+                                        {
+                                            return Request.CreateResponse("Not Response");
+                                        }
+                                    }
+                                    else
+                                        return Request.CreateResponse("project Already Allocated to this group");
+                                }
+                                else
+                                    return Request.CreateResponse("Supervisor's Project Allocation Limit");
+                            }
+                            else
+                                return Request.CreateResponse("teacher not founded");
+                        }
+                        else
+                            return Request.CreateResponse("Project Already Assigned to Group");
+                    }
+                    else if (projectRequest.status == 2 || projectRequest.status == -1)
+                    {
+                        return Request.CreateResponse("Project Already Allcated");
+                    }
+                    else
+                    {
+                        return Request.CreateResponse("Request Not Approved");
+                    }
 
+                }
+                else
+                {
+                    return Request.CreateResponse("Request Already Handled");
+                }
 
-        /*---------------------==========Getting all the supervisor Requests==========---------------------*/
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
+            }
+        }
         
 
 
+        /*---------------------==========Getting all the supervisor Requests==========---------------------*/
 
 
 

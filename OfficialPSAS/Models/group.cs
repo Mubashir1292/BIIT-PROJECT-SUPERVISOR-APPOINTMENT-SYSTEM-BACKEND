@@ -21,6 +21,7 @@ namespace OfficialPSAS.Models
             this.groupRequests = new HashSet<groupRequests>();
             this.Project = new HashSet<Project>();
             this.projectRequests = new HashSet<projectRequests>();
+            this.SupervisorGroupConnection = new HashSet<SupervisorGroupConnection>();
             this.Task = new HashSet<Task>();
             this.teacher = new HashSet<teacher>();
         }
@@ -43,6 +44,8 @@ namespace OfficialPSAS.Models
         public virtual ICollection<Project> Project { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<projectRequests> projectRequests { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SupervisorGroupConnection> SupervisorGroupConnection { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Task> Task { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

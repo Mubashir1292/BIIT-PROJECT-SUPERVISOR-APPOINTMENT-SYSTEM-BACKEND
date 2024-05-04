@@ -111,6 +111,24 @@
     <Property Name="uid" Type="varchar" MaxLength="100" />
     <Property Name="image" Type="varchar(max)" />
   </EntityType>
+  <EntityType Name="SupervisorGroupConnection">
+    <Key>
+      <PropertyRef Name="s_id" />
+    </Key>
+    <Property Name="s_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="gid" Type="int" />
+    <Property Name="tid" Type="int" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
   <EntityType Name="Task">
     <Key>
       <PropertyRef Name="task_id" />
@@ -445,6 +463,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK__SupervisorG__gid__0E04126B">
+    <End Role="group" Type="Self.group" Multiplicity="0..1" />
+    <End Role="SupervisorGroupConnection" Type="Self.SupervisorGroupConnection" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="group">
+        <PropertyRef Name="gid" />
+      </Principal>
+      <Dependent Role="SupervisorGroupConnection">
+        <PropertyRef Name="gid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__SupervisorG__tid__0EF836A4">
+    <End Role="teacher" Type="Self.teacher" Multiplicity="0..1" />
+    <End Role="SupervisorGroupConnection" Type="Self.SupervisorGroupConnection" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="teacher">
+        <PropertyRef Name="tid" />
+      </Principal>
+      <Dependent Role="SupervisorGroupConnection">
+        <PropertyRef Name="tid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK__Task__gid__7EC1CEDB">
     <End Role="group" Type="Self.group" Multiplicity="0..1" />
     <End Role="Task" Type="Self.Task" Multiplicity="*" />
@@ -588,6 +630,8 @@
     <EntitySet Name="projectRequests" EntityType="Self.projectRequests" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Schedule" EntityType="Self.Schedule" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SupervisorGroupConnection" EntityType="Self.SupervisorGroupConnection" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Task" EntityType="Self.Task" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="TaskProgress" EntityType="Self.TaskProgress" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="teacher" EntityType="Self.teacher" Schema="dbo" store:Type="Tables" />
@@ -683,6 +727,14 @@
     <AssociationSet Name="FK__Student__uid__5CD6CB2B" Association="Self.FK__Student__uid__5CD6CB2B">
       <End Role="users" EntitySet="users" />
       <End Role="Student" EntitySet="Student" />
+    </AssociationSet>
+    <AssociationSet Name="FK__SupervisorG__gid__0E04126B" Association="Self.FK__SupervisorG__gid__0E04126B">
+      <End Role="group" EntitySet="group" />
+      <End Role="SupervisorGroupConnection" EntitySet="SupervisorGroupConnection" />
+    </AssociationSet>
+    <AssociationSet Name="FK__SupervisorG__tid__0EF836A4" Association="Self.FK__SupervisorG__tid__0EF836A4">
+      <End Role="teacher" EntitySet="teacher" />
+      <End Role="SupervisorGroupConnection" EntitySet="SupervisorGroupConnection" />
     </AssociationSet>
     <AssociationSet Name="FK__Task__gid__7EC1CEDB" Association="Self.FK__Task__gid__7EC1CEDB">
       <End Role="group" EntitySet="group" />
