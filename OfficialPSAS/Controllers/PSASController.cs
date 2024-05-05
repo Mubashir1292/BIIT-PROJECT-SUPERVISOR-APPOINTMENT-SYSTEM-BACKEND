@@ -2132,15 +2132,11 @@ namespace OfficialPSAS.Controllers
                         return Request.CreateResponse("Group not founded");
                     }
                     // project finding details 
-                    var project = db.Project.Where(s => s.pid == projectRequest.Project.pid && s.status == 0).Select(s => new
+                    var project = db.Project.Where(s => s.pid == projectRequest.Project.pid && s.status == 0 && s.projectDomain
+                    .pd_Id==6).Select(s => new
                     {
                         title=s.title,
-                        description=s.description,
-                        teacher = new
-                        {
-                            s.teacher.tid,
-                            s.teacher.users.username,
-                        },
+                        description=s.description,                        
                         projectDomain = new
                         {
                             s.projectDomain.pd_Id,
@@ -2166,15 +2162,138 @@ namespace OfficialPSAS.Controllers
                 return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
             }
         }
+        /*---------------------==========  Generic Project Assigning   ==========---------------------*/
+        [HttpGet]
+        public HttpResponseMessage AvailiableSuperivsors()
+        {
+            try
+            {
+                var allSupervisors = (from teacher in db.teacher
+                                      join connection in db.SupervisorGroupConnection on
+                                      teacher.tid equals connection.teacher.tid
+                                      into joinedGroup from connection in joinedGroup.DefaultIfEmpty()
+                                      group teacher by new
+                                      {
+                                          teacher.tid,
+                                          teacher.users.username
+                                      } into grouped
+                                      where grouped.Count() <= 5 || grouped.Count()==0
+                                      select new
+                                      {
+                                          grouped.Key.tid,
+                                          grouped.Key.username
+                                      }).Distinct().ToList();      
+                if (allSupervisors.Count > 0)
+                {
+                    return Request.CreateResponse(allSupervisors);
+                }
+                else
+                {
+                    return Request.CreateResponse("not founded");
+                }
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
+            }
+        }
+        /*---------------------------==================   Fetch Group Details    ===================-------------------------*/
+        [HttpGet]
+        public HttpResponseMessage SupervisorProjectFetching(int sup_id)
+        {
+            try
+            {
+                var teacher = db.teacher.Where(s => s.tid == sup_id).FirstOrDefault();
+                if (teacher != null)
+                {
+                    var allocatedGroups = db.SupervisorGroupConnection.Where(s => s.teacher.tid == teacher.tid).Select(s => new
+                    {
+                     group_id=s.group.gid
+                    }).Distinct().ToList();
+                    return Request.CreateResponse(allocatedGroups);                    
+                }
+                else
+                {
+                    return Request.CreateResponse("Teacher not founded");
+                }
 
-
-
-        /*---------------------==========Getting all the  Requests==========---------------------*/
-
-
-
-
-
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
+            }
+        }
+        /*---------------------------==================   Assign Supervisor to group on generic project    ===================-------------------------*/
+        [HttpPost]
+        public HttpResponseMessage AllocatedProject(int req_id,int project_id,int group_id,int teacher_id,int status)
+        {
+            try
+            {
+                var projectRequest = db.projectRequests.Where(s => s.req_id == req_id && (s.status==0 || s.Project.projectDomain.pd_Id==6)).FirstOrDefault();
+                if (projectRequest != null)
+                {                
+                    var project = db.Project.Where(s => s.pid == project_id && s.status == 0).FirstOrDefault();
+                    if (project != null)
+                    {
+                        var group = db.group.Where(s => s.gid == group_id && (s.pid == 0 || s.pid == null || s.tid == 0 || s.tid == null)).FirstOrDefault();
+                        if (group != null)
+                        {
+                            var teacher = db.teacher.Where(s => s.tid == teacher_id).FirstOrDefault();
+                            if (teacher != null)
+                            {
+                                var checkingAssignedProjects = db.SupervisorGroupConnection.Where(s => s.teacher.tid == teacher.tid).Distinct().ToList();
+                                if (checkingAssignedProjects.Count < 5)
+                                {
+                                    if (status == 1)
+                                    {
+                                        group.pid = project.pid;
+                                        group.tid = teacher.tid;
+                                        // notice it is a generic project ..
+                                        project.group = group;
+                                        project.status = 1;
+                                        project.teacher = teacher;
+                                        projectRequest.teacher = teacher;
+                                        projectRequest.status = 2;
+                                        // adding details of supervisorGroupConnection
+                                        SupervisorGroupConnection gmc = new SupervisorGroupConnection();
+                                        gmc.teacher = teacher;
+                                        gmc.group = group;
+                                        db.SupervisorGroupConnection.Add(gmc);
+                                        int RowsEffected = db.SaveChanges();
+                                        return Request.CreateResponse("General Project Allocated to group "+RowsEffected);
+                                    }
+                                    else
+                                    {
+                                        return Request.CreateResponse("Project Allocation Cancelled");
+                                    }
+                                }
+                                else
+                                {
+                                    return Request.CreateResponse("5 projects already assigned");
+                                }
+                            }
+                            else
+                            {
+                                return Request.CreateResponse("Teacher not founded");
+                            }
+                        }
+                        else
+                        {
+                            return Request.CreateResponse("group not founded");
+                        }
+                    }
+                    else
+                    {
+                        return Request.CreateResponse("Project Already Allocated ...");
+                    }
+                }
+                else
+                {
+                    return Request.CreateResponse("Project Request not founded");
+                }
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message+":"+cp.InnerException);
+            }
+        }
 
     }
 }
