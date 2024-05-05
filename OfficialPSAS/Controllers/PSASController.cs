@@ -1628,68 +1628,147 @@ namespace OfficialPSAS.Controllers
 
         }
 
-            
 
 
-        //* Project Commetiee Panel*/
-        /*------------------Getting the Student Requests for group Joining------------------------*/
+        //* ---------------------------------------========================   Project Commetiee Panel   =================--------------------------------------------*/
+        
+        // All Notifications Fetching for the project Commettiee panel
         [HttpGet]
-        public HttpResponseMessage AllStudentRequestsOfGroupjoining(string com_id)
+        public HttpResponseMessage GetAllNotifications()
         {
             try
             {
-                var user = db.users.Where(s => s.uid == com_id).FirstOrDefault();
-                var response = new object();
-                List<groupMembersDetails> allGroupMembers = new List<groupMembersDetails>();
-                if (user != null)
-                {
-                   var AllRequests=db.groupRequests.Where(s=>s.users.uid==com_id).Select(s=>new {                                       
-                                           s.message_id,
-                                           s.message_body,
-                                           s.Technology.name,
-                                           s.users.uid,
-                                           s.@group.gid,
-                                       }).Distinct().ToList();
-                    if (AllRequests.Count >0)
+                // first fetch the Students Request to Join a group with the Distinct Technology
+                // go to groupRequests table and fetch all those requests which have receiver_id 8 instead of any student regno...
+                var user = db.users.Where(s => s.uid.Equals("8")).FirstOrDefault();
+                Dictionary<string, object> response = new Dictionary<string, object>();
+                    if (user != null)
                     {
-
-                        foreach(var i in AllRequests)
+                        var AllGroupRequests = db.groupRequests.Where(s => s.users.uid == user.uid).Select(s => new {
+                            s.message_id,
+                            s.message_body,
+                            technology=s.Technology.name,
+                            s.users1.uid,
+                            s.@group.gid,
+                        }).Distinct().ToList();
+                    response["Students_Requests_For_GroupJoining"] = AllGroupRequests;
+                        //second fetch the ProjectRequests table and find out all requests which have the status 1 and 0
+                        // when you fetch the ProjectRequests you will find the 2 main type of requests 1 in Supervisor's Supervising Request 
+                        // in this request you have to refer the other functions which are written in the 2000's lines ok?? just do it....
+                        var projectRequests = db.projectRequests.Where(s => s.status == 0 && s.Project.projectDomain.pd_Id != 6).Select(s => new
                         {
-                            var fetchingGroupDetails = db.GroupMember.Where(s => s.group.gid == i.gid).Select(s => new
+                            request_id=s.req_id,
+                            group_id=s.group.gid,
+                            teacher_id=s.teacher.tid,
+                            teacher_Name=s.teacher.users.username,
+                            project_id=s.Project.pid,
+                            project_title=s.Project.title,
+                            date=s.req_date
+                        }).Distinct().ToList();
+                        if (projectRequests.Count > 0)
+                        {
+                            response["Superising_Approval_Requests"]=projectRequests;
+                        }
+                        // and 
+                            // second is from a group to a Generic Project request without referencing the Supervisor
+                            // check if the ProjectRequest's project mentioned have a project-domain = 6 then it is a generic project.. then you have to Allocate them
+                            // a project by viewing their cgpa,grade and Allocate them a supervisor also..  
+                            var GenericProjectRequests = db.projectRequests.Where(s => s.Project.projectDomain.pd_Id == 6 && s.status == 0).Select(s => new
                             {
-                                s.st_id,
-                                s.Student.users.username,
-                                s.Technology.name,
-                                s.Student.cgpa,
-                                s.Student.Grade,
-                                s.Student.semester,
-                                s.Student.section,
+                                request_id = s.req_id,
+                                group_id = s.group.gid,
+                                project_id = s.Project.pid,
+                                project_title = s.Project.title,
+                                date = s.req_date
                             }).Distinct().ToList();
-                            if (fetchingGroupDetails != null)
+                            if (GenericProjectRequests.Count > 0)
                             {
-                                foreach (var j in fetchingGroupDetails)
+                                response["Generic_Project_Requests"]=GenericProjectRequests;
+                            }
+                        return Request.CreateResponse(response);
+
+                    }
+                    else
+                    {
+                        return Request.CreateResponse("User not Founded");
+                    }
+            }
+            catch (Exception cp)
+            {
+                return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
+            }
+        }
+        /*------------------Getting the Student Requests for group Joining------------------------*/
+        [HttpGet]
+        public HttpResponseMessage SingleStudentRequestOfGroupjoining(int req_id)
+        {
+            try
+            {
+                List<object> groupRequest = new List<object>();
+                var RequestDetail = db.groupRequests.Where(s => s.message_id == req_id&&(s.status!=1||s.status!=2)).FirstOrDefault();
+                List<groupMembersDetails> allGroupMembers = new List<groupMembersDetails>();
+                if (RequestDetail != null)
+                {
+                    groupRequest.Add(new
+                    {
+                        message_id=RequestDetail.message_id,
+                        message_body=RequestDetail.message_body,
+                        technology=RequestDetail.Technology.name,
+                        student_id=RequestDetail.users1.uid,
+                        group_id=RequestDetail.group.gid,
+                    });
+                    //checking Student's Details
+                    var StudentFinding = db.Student.Where(s => s.st_id == RequestDetail.users1.uid).FirstOrDefault();
+                    if (StudentFinding != null)
+                    {
+                        // checking Student Group Status
+                        var checkingGroupStatusOfStudent = db.GroupMember.Where(s => s.st_id == StudentFinding.st_id).FirstOrDefault();
+                        if (checkingGroupStatusOfStudent == null)
+                        {
+                            var groupMembers = db.GroupMember.Where(s => s.group.gid == RequestDetail.group.gid).Distinct().ToList();
+                            if (groupMembers.Count > 0)
+                            {
+                                foreach (var i in groupMembers)
                                 {
                                     groupMembersDetails gm = new groupMembersDetails();
-                                    gm.st_id = j.st_id;
-                                    gm.name = j.name;
-                                    gm.technology = j.username;
-                                    gm.cgpa = (double)j.cgpa;
-                                    gm.grade = j.Grade;
-                                    gm.semester = j.semester;
-                                    gm.section = j.section;
+                                    gm.st_id = i.st_id;
+                                    gm.name = i.Student.users.username;
+                                    gm.technology = i.Technology.name;
+                                    gm.cgpa = (double)i.Student.cgpa;
+                                    gm.grade = i.Student.Grade;
+                                    gm.semester = i.Student.semester;
+                                    gm.section = i.Student.section;
                                     allGroupMembers.Add(gm);
                                 }
+                                var response = new
+                                {
+                                    Project_Details = new
+                                    {
+                                        RequestDetails=groupRequest,
+                                        groupDetails=allGroupMembers
+                                    },
+                                };
+                                return Request.CreateResponse(response);
+                            }
+                            else
+                            {
+                                return Request.CreateResponse("No Group Founded");
                             }
                         }
-                        response = new
+                        else
                         {
-                            AllRequests,
-                            allGroupMembers
-                        };
-                     return Request.CreateResponse(response);
+                            return Request.CreateResponse("Student Already Joined a group");
+                        }
+                    }
+                    else
+                    {
+                        return Request.CreateResponse("No Student Founded");
                     }
                 }
-                return Request.CreateResponse("");
+                else
+                {
+                    return Request.CreateResponse("No Request Founded");
+                }
             }catch(Exception cp)
             {
                 return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
@@ -2009,10 +2088,91 @@ namespace OfficialPSAS.Controllers
                 return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
             }
         }
-        
+        /*---------------------==========      Generic    ----   Projects   ---- Requests  ==========---------------------*/
+        [HttpGet]
+        public HttpResponseMessage SingleGenericProjectRequest(int req_id)
+        {
+            try
+            {
+                List<groupMembersDetails> allGroupMembers = new List<groupMembersDetails>();
+                Dictionary<string, object> AllDetails = new Dictionary<string, object>();
+                // finding the request data 
+                var projectRequest = db.projectRequests.Where(s => s.req_id == req_id).FirstOrDefault();
+                if (projectRequest != null)
+                {
+                    // finding the group data (groupMember)
+                    var group = db.group.Where(s => s.gid == projectRequest.group.gid).FirstOrDefault();
+                    if (group != null)
+                    {
+                        var groupMembers = db.GroupMember.Where(s => s.group.gid == group.gid).Distinct().ToList();
+                        if (groupMembers.Count >= 3)
+                        {
+                            foreach(var member in groupMembers)
+                            {
+                                groupMembersDetails gm = new groupMembersDetails();
+                                gm.st_id = member.st_id;
+                                gm.name = member.Student.users.username;
+                                gm.technology = member.Technology.name;
+                                gm.cgpa = (double)member.Student.cgpa;
+                                gm.grade = member.Student.Grade;
+                                gm.semester = member.Student.semester;
+                                gm.section = member.Student.section;
+                                allGroupMembers.Add(gm);
+                            }
+                            AllDetails["groupDetails"] = allGroupMembers;
+                            AllDetails["groupAvgCgpa"] = group.avgCgpa;
+                        }
+                        else
+                        {
+                            return Request.CreateResponse("Group Members must be 3 or more");
+                        }
+                    }
+                    else
+                    {
+                        return Request.CreateResponse("Group not founded");
+                    }
+                    // project finding details 
+                    var project = db.Project.Where(s => s.pid == projectRequest.Project.pid && s.status == 0).Select(s => new
+                    {
+                        title=s.title,
+                        description=s.description,
+                        teacher = new
+                        {
+                            s.teacher.tid,
+                            s.teacher.users.username,
+                        },
+                        projectDomain = new
+                        {
+                            s.projectDomain.pd_Id,
+                            s.projectDomain.name
+                        },
+                    }).FirstOrDefault();
+                    if (project != null)
+                    {
+                        AllDetails["Project_Details"] = project;
+                    }
+                    else
+                    {
+                        return Request.CreateResponse("Project not founded");
+                    }
+                    return Request.CreateResponse(AllDetails);
+                }
+                else
+                {
+                    return Request.CreateResponse("Not founded any project Request");
+                }               
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
+            }
+        }
 
 
-        /*---------------------==========Getting all the supervisor Requests==========---------------------*/
+
+        /*---------------------==========Getting all the  Requests==========---------------------*/
+
+
+
 
 
 
