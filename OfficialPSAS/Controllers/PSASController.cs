@@ -14,7 +14,6 @@ namespace OfficialPSAS.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class PSASController : ApiController
     {
-
         OfficialSASEntities30 db = new OfficialSASEntities30();
         /*public string  CheckForTechnicalExpert(string tid)
         {
@@ -1221,8 +1220,6 @@ namespace OfficialPSAS.Controllers
                 return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
             }
         }
-            
-        
                         /// <summary>
                         /// Requesting to the Supervisor For Project
                         /// </summary>
@@ -1233,33 +1230,50 @@ namespace OfficialPSAS.Controllers
             try
             {
                 projectRequests pr = new projectRequests();
-                var findingProject = db.Project.Where(s => s.pid == projectId).FirstOrDefault();
+                var findingProject = db.Project.Where(s => s.pid == projectId && s.status==0).FirstOrDefault();
                 if (findingProject != null)
                 {
-                    var findingGroup = db.GroupMember.Where(s => s.st_id == regNo).Select(s => s.group).FirstOrDefault();
-                    if (findingGroup != null)
-                    {
-                        var groupMembersList = db.GroupMember.Where(s => s.group.gid == findingGroup.gid).ToList();
-                        if (groupMembersList.Count >= 3)
+                        var findingGroup = db.GroupMember.Where(s => s.st_id == regNo).Select(s => s.group).FirstOrDefault();
+                        if (findingGroup != null)
                         {
-                            pr.group = findingGroup;
-                            pr.teacher = findingProject.teacher;
-                            pr.Project = findingProject;
-                            pr.status = 0;
-                            pr.req_date = DateTime.Now;
-                            db.projectRequests.Add(pr);
-                            db.SaveChanges();
-                            return Request.CreateResponse("Posted the Request for the project");
+                            var checkingDuplication = db.projectRequests.Where(s => s.group.gid == findingGroup.gid && s.status == 0).FirstOrDefault();
+                            if (checkingDuplication == null)
+                            {
+                                var groupMembersList = db.GroupMember.Where(s => s.group.gid == findingGroup.gid).ToList();
+                                if (groupMembersList.Count >= 3)
+                                {
+                                    // no checking whether the teacher is present in project row or not..
+                                    if (findingProject.projectDomain.pd_Id != 6)
+                                    {
+                                        pr.teacher = findingProject.teacher;
+                                    }
+                                    else
+                                    {
+                                        pr.teacher = null;
+                                    }
+                                        pr.group = findingGroup;
+                                        pr.Project = findingProject;
+                                        pr.status = 0;
+                                        pr.req_date = DateTime.Now;
+                                        db.projectRequests.Add(pr);
+                                        db.SaveChanges();
+                                        return Request.CreateResponse("Posted the Request for the project");
+                                    
+                                }
+                                else
+                                {
+                                    return Request.CreateResponse(HttpStatusCode.NotFound, "Group Must abe 3 members");
+                                }
+                            }
+                            else
+                            {
+                                return Request.CreateResponse("Already Requested..");
+                            }
                         }
                         else
                         {
-                            return Request.CreateResponse(HttpStatusCode.NotFound,"Group Must abe 3 members");
-                        }
-                    }
-                    else
-                    {
-                        return Request.CreateResponse(HttpStatusCode.NotFound,"group not founded");
-                    }
+                            return Request.CreateResponse(HttpStatusCode.NotFound, "group not founded");
+                        }                    
                 }
                 else
                 {
@@ -1271,7 +1285,6 @@ namespace OfficialPSAS.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError,cp.Message + ":" + cp.InnerException);
             }
         }
-
         // ------------ help Request------------------
         [HttpGet]
         public HttpResponseMessage GetAllDays()
@@ -2294,6 +2307,8 @@ namespace OfficialPSAS.Controllers
                 return Request.CreateResponse(cp.Message+":"+cp.InnerException);
             }
         }
+
+
 
     }
 }
