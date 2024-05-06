@@ -1668,7 +1668,7 @@ namespace OfficialPSAS.Controllers
                         //second fetch the ProjectRequests table and find out all requests which have the status 1 and 0
                         // when you fetch the ProjectRequests you will find the 2 main type of requests 1 in Supervisor's Supervising Request 
                         // in this request you have to refer the other functions which are written in the 2000's lines ok?? just do it....
-                        var projectRequests = db.projectRequests.Where(s => s.status == 0 && s.Project.projectDomain.pd_Id != 6).Select(s => new
+                        var projectRequests = db.projectRequests.Where(s => s.status == 1 && s.Project.projectDomain.pd_Id != 6).Select(s => new
                         {
                             request_id=s.req_id,
                             group_id=s.group.gid,
@@ -1939,68 +1939,82 @@ namespace OfficialPSAS.Controllers
         {
             try
             {
-                var response = new object();
-                var isRequest = db.projectRequests.Where(s => s.req_id == requestId && s.status == 1).FirstOrDefault();
+                Dictionary<string, object> allDetails = new Dictionary<string, object>();
                 List<groupMembersDetails> allGroupMembers = new List<groupMembersDetails>();
-                if (isRequest != null)
+                var projectRequest = db.projectRequests.Where(s => s.req_id == requestId && s.status == 1).FirstOrDefault();
+                if (projectRequest != null)
                 {
-                    // checking group details
-                    var groupMembers = db.GroupMember.Where(s => s.group.gid == isRequest.group.gid).Distinct().ToList();
-                    if (groupMembers.Count > 0)
+                    var project = db.Project.Where(s => s.pid == projectRequest.Project.pid && s.status==0).FirstOrDefault();
+                    if (project != null)
                     {
-                        foreach(var i in groupMembers)
+                        var projectDetails = new
                         {
-                            groupMembersDetails gm = new groupMembersDetails();
-                            gm.st_id = i.st_id;
-                            gm.name = i.Student.users.username;
-                            gm.technology = i.Technology.name;
-                            gm.cgpa = (double)i.Student.cgpa;
-                            gm.grade = i.Student.Grade;
-                            gm.semester = i.Student.semester;
-                            gm.section = i.Student.section;
-                            allGroupMembers.Add(gm);
-                        }
-                    }
-                    var supervisor = db.teacher.Where(s => s.tid == isRequest.teacher.tid).FirstOrDefault();
-                    if (supervisor != null)
-                    {
-                        // fetching all already Allocated Projects
-                        var allAllocatedProjects = db.Project.Where(s => s.teacher.tid == supervisor.tid && s.status == 1).Select(s => new
+                            project.pid,
+                            project.title,
+                            project.description
+                        };
+                        allDetails["projectDetails"] = projectDetails;
+                        var group = db.group.Where(s => s.gid == projectRequest.group.gid && s.pid.Equals(null) && s.tid.Equals(null)).FirstOrDefault();
+                        if (group != null)
                         {
-                            s.group.gid,
-                            s.pid,
-                            s.title,
-                            s.users.uid,
-                            s.users.username,
-                        }).Distinct().ToList();
-                        if (allAllocatedProjects != null)
-                        {
-                            response = new
+                            var groupDetails = new
                             {
-                                groupRequestId=isRequest.req_id,
-                                allAllocatedProjects,
-                                supervisor = new {
-                                    supervisor.tid,
-                                    supervisor.users.username,
-                                },
-                                    allGroupMembers                                
+                                group.gid,
+                                group.avgCgpa,
+                                group.creatingDate,                                
                             };
-                            return Request.CreateResponse(response);
+                            allDetails["groupDetails"] = groupDetails;
+                            var allocatedProjects = db.SupervisorGroupConnection.Where(s => s.teacher.tid == project.teacher.tid).Distinct().ToList();
+                            if (allocatedProjects != null)
+                            {
+                                var teacher = new
+                                {
+                                    project.teacher.tid,
+                                    project.teacher.users.username,
+                                    allocatedProjects.Count
+                                };
+                                allDetails["teacherDetails"] = teacher;                                
+                            }
+                            else
+                            {
+                                return Request.CreateResponse("No Allocated Projects");
+                            }
+                            var groupMembers = db.GroupMember.Where(s => s.group.gid == group.gid).Distinct().ToList();
+                            if (groupMembers != null)
+                            {
+                             foreach(var member in groupMembers)
+                                {
+                                    groupMembersDetails gm = new groupMembersDetails();
+                                    gm.st_id = member.st_id;
+                                    gm.name = member.Student.users.username;
+                                    gm.cgpa = (double)member.Student.cgpa;
+                                    gm.technology = member.Technology.name;
+                                    gm.grade = member.Student.Grade;
+                                    gm.semester = member.Student.semester;
+                                    gm.section = member.Student.section;
+                                    allGroupMembers.Add(gm);
+                                }
+                                allDetails["allGroupMembers"] = allGroupMembers;
+                                return Request.CreateResponse(allDetails);
+                            }
+                            else
+                            {
+                                return Request.CreateResponse("No GroupMembers Founded");
+                            }
                         }
                         else
                         {
-                            return Request.CreateResponse("Not Founded Any Allocated project");
+                            return Request.CreateResponse("Group Not Found");
                         }
                     }
                     else
                     {
-                        return Request.CreateResponse("Supervisor Not Founded");
+                        return Request.CreateResponse("Project Not found");
                     }
-
                 }
                 else
                 {
-                    return Request.CreateResponse("Request not founded");
+                    return Request.CreateResponse("not founded any Request");
                 }
             }catch(Exception cp)
             {
@@ -2009,23 +2023,23 @@ namespace OfficialPSAS.Controllers
         }
         /*-------------------------------------====================  Allocate the project to Supervisor   =========================---------------------------*/
         [HttpPost]
-        public HttpResponseMessage AllocateProjectToSupervisor(int project_id, int teacher_id, int group_id, int status,int requestId)
+        public HttpResponseMessage AllocateProjectToSupervisor(int requestId,int status)
         {
             try
             {
-                var projectRequest = db.projectRequests.Where(s => s.req_id == requestId).FirstOrDefault();
-                if (projectRequest.status == 1)
+                var projectRequest = db.projectRequests.Where(s => s.req_id == requestId && s.status==1).FirstOrDefault();
+                if (projectRequest!=null)
                 {
                     // check the Project Allocation
-                    var project = db.Project.Where(s => s.pid == project_id && s.status != 1).FirstOrDefault();
+                    var project = db.Project.Where(s => s.pid == projectRequest.Project.pid && s.status != 1).FirstOrDefault();
                     if (project != null)
                     {
                         // checking group's project status
-                        var group = db.group.Where(s => s.gid == group_id && (s.pid == 0 || s.pid == null)).FirstOrDefault();
+                        var group = db.group.Where(s => s.gid == projectRequest.group.gid && s.pid.Equals(null)).FirstOrDefault();
                         if (group != null)
                         {
                             // check teacher 
-                            var teacher = db.teacher.Where(s => s.tid == teacher_id).FirstOrDefault();
+                            var teacher = db.teacher.Where(s => s.tid ==projectRequest.teacher.tid).FirstOrDefault();
                             if (teacher != null)
                             {
                                 //check teacher group limit from SupervisorGroupConeection Table
@@ -2033,7 +2047,7 @@ namespace OfficialPSAS.Controllers
                                 if (projectsLimit.Count < 5)
                                 {
                                     //check status details
-                                    var groupStatus = db.group.Where(s => s.gid == group_id && (s.pid == null || s.pid == 0)).FirstOrDefault();
+                                    var groupStatus = db.group.Where(s => s.gid == group.gid &&s.pid.Equals(null)).FirstOrDefault();
                                     if (groupStatus != null)
                                     {
                                         // update request status
