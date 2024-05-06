@@ -14,7 +14,7 @@ namespace OfficialPSAS.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class PSASController : ApiController
     {
-        OfficialSASEntities30 db = new OfficialSASEntities30();
+        OfficialSASEntities31 db = new OfficialSASEntities31();
         /*public string  CheckForTechnicalExpert(string tid)
         {
             var teacherAndTechnicalExpertSame = from t in db.teacher

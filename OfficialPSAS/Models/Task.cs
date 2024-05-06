@@ -24,6 +24,7 @@ namespace OfficialPSAS.Models
         public string Title { get; set; }
         public string description { get; set; }
         public Nullable<System.DateTime> DueDate { get; set; }
+        public string filePath { get; set; }
     
         public virtual group group { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

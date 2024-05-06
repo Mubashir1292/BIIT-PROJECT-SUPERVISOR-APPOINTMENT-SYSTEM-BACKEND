@@ -46,6 +46,17 @@
     <Property Name="tecId" Type="int" />
     <Property Name="gid" Type="int" />
   </EntityType>
+  <EntityType Name="Meeting">
+    <Key>
+      <PropertyRef Name="mid" />
+    </Key>
+    <Property Name="mid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="status" Type="int" />
+    <Property Name="Sch_id" Type="int" />
+    <Property Name="Date" Type="date" />
+    <Property Name="participantId" Type="varchar" MaxLength="100" />
+    <Property Name="createdBy" Type="varchar" MaxLength="100" />
+  </EntityType>
   <EntityType Name="Project">
     <Key>
       <PropertyRef Name="pid" />
@@ -99,6 +110,45 @@
     <Property Name="Grade" Type="varchar" MaxLength="50" />
     <Property Name="uid" Type="varchar" MaxLength="100" />
     <Property Name="image" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="SupervisorGroupConnection">
+    <Key>
+      <PropertyRef Name="s_id" />
+    </Key>
+    <Property Name="s_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="gid" Type="int" />
+    <Property Name="tid" Type="int" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="Task">
+    <Key>
+      <PropertyRef Name="task_id" />
+    </Key>
+    <Property Name="task_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Title" Type="varchar" MaxLength="100" />
+    <Property Name="description" Type="varchar(max)" />
+    <Property Name="DueDate" Type="date" />
+    <Property Name="gid" Type="int" />
+    <Property Name="filePath" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="TaskProgress">
+    <Key>
+      <PropertyRef Name="progress_id" />
+    </Key>
+    <Property Name="progress_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="task_id" Type="int" />
+    <Property Name="grpMem" Type="varchar" MaxLength="100" />
+    <Property Name="status" Type="int" />
+    <Property Name="Comments" Type="varchar(max)" />
   </EntityType>
   <EntityType Name="teacher">
     <Key>
@@ -231,6 +281,30 @@
       </Principal>
       <Dependent Role="groupRequests">
         <PropertyRef Name="gid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Meeting__created__7BE56230">
+    <End Role="users" Type="Self.users" Multiplicity="0..1" />
+    <End Role="Meeting" Type="Self.Meeting" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="uid" />
+      </Principal>
+      <Dependent Role="Meeting">
+        <PropertyRef Name="createdBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Meeting__Sch_id__7AF13DF7">
+    <End Role="Schedule" Type="Self.Schedule" Multiplicity="0..1" />
+    <End Role="Meeting" Type="Self.Meeting" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Schedule">
+        <PropertyRef Name="Sch_id" />
+      </Principal>
+      <Dependent Role="Meeting">
+        <PropertyRef Name="Sch_id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -390,6 +464,66 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK__SupervisorG__gid__0E04126B">
+    <End Role="group" Type="Self.group" Multiplicity="0..1" />
+    <End Role="SupervisorGroupConnection" Type="Self.SupervisorGroupConnection" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="group">
+        <PropertyRef Name="gid" />
+      </Principal>
+      <Dependent Role="SupervisorGroupConnection">
+        <PropertyRef Name="gid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__SupervisorG__tid__0EF836A4">
+    <End Role="teacher" Type="Self.teacher" Multiplicity="0..1" />
+    <End Role="SupervisorGroupConnection" Type="Self.SupervisorGroupConnection" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="teacher">
+        <PropertyRef Name="tid" />
+      </Principal>
+      <Dependent Role="SupervisorGroupConnection">
+        <PropertyRef Name="tid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Task__gid__7EC1CEDB">
+    <End Role="group" Type="Self.group" Multiplicity="0..1" />
+    <End Role="Task" Type="Self.Task" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="group">
+        <PropertyRef Name="gid" />
+      </Principal>
+      <Dependent Role="Task">
+        <PropertyRef Name="gid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__TaskProgr__grpMe__02925FBF">
+    <End Role="GroupMember" Type="Self.GroupMember" Multiplicity="0..1" />
+    <End Role="TaskProgress" Type="Self.TaskProgress" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GroupMember">
+        <PropertyRef Name="st_id" />
+      </Principal>
+      <Dependent Role="TaskProgress">
+        <PropertyRef Name="grpMem" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__TaskProgr__task___019E3B86">
+    <End Role="Task" Type="Self.Task" Multiplicity="0..1" />
+    <End Role="TaskProgress" Type="Self.TaskProgress" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Task">
+        <PropertyRef Name="task_id" />
+      </Principal>
+      <Dependent Role="TaskProgress">
+        <PropertyRef Name="task_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK__teacher__gid__6383C8BA">
     <End Role="group" Type="Self.group" Multiplicity="0..1" />
     <End Role="teacher" Type="Self.teacher" Multiplicity="*" />
@@ -491,11 +625,16 @@
     <EntitySet Name="group" EntityType="Self.group" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="GroupMember" EntityType="Self.GroupMember" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="groupRequests" EntityType="Self.groupRequests" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Meeting" EntityType="Self.Meeting" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Project" EntityType="Self.Project" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="projectDomain" EntityType="Self.projectDomain" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="projectRequests" EntityType="Self.projectRequests" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Schedule" EntityType="Self.Schedule" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SupervisorGroupConnection" EntityType="Self.SupervisorGroupConnection" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Task" EntityType="Self.Task" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TaskProgress" EntityType="Self.TaskProgress" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="teacher" EntityType="Self.teacher" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="TechnicalExpertTechnology" EntityType="Self.TechnicalExpertTechnology" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Technology" EntityType="Self.Technology" Schema="dbo" store:Type="Tables" />
@@ -529,6 +668,14 @@
     <AssociationSet Name="FK__groupReques__gid__6CA31EA0" Association="Self.FK__groupReques__gid__6CA31EA0">
       <End Role="group" EntitySet="group" />
       <End Role="groupRequests" EntitySet="groupRequests" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Meeting__created__7BE56230" Association="Self.FK__Meeting__created__7BE56230">
+      <End Role="users" EntitySet="users" />
+      <End Role="Meeting" EntitySet="Meeting" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Meeting__Sch_id__7AF13DF7" Association="Self.FK__Meeting__Sch_id__7AF13DF7">
+      <End Role="Schedule" EntitySet="Schedule" />
+      <End Role="Meeting" EntitySet="Meeting" />
     </AssociationSet>
     <AssociationSet Name="FK__Message__receive__681373AD" Association="Self.FK__Message__receive__681373AD">
       <End Role="users" EntitySet="users" />
@@ -581,6 +728,26 @@
     <AssociationSet Name="FK__Student__uid__5CD6CB2B" Association="Self.FK__Student__uid__5CD6CB2B">
       <End Role="users" EntitySet="users" />
       <End Role="Student" EntitySet="Student" />
+    </AssociationSet>
+    <AssociationSet Name="FK__SupervisorG__gid__0E04126B" Association="Self.FK__SupervisorG__gid__0E04126B">
+      <End Role="group" EntitySet="group" />
+      <End Role="SupervisorGroupConnection" EntitySet="SupervisorGroupConnection" />
+    </AssociationSet>
+    <AssociationSet Name="FK__SupervisorG__tid__0EF836A4" Association="Self.FK__SupervisorG__tid__0EF836A4">
+      <End Role="teacher" EntitySet="teacher" />
+      <End Role="SupervisorGroupConnection" EntitySet="SupervisorGroupConnection" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Task__gid__7EC1CEDB" Association="Self.FK__Task__gid__7EC1CEDB">
+      <End Role="group" EntitySet="group" />
+      <End Role="Task" EntitySet="Task" />
+    </AssociationSet>
+    <AssociationSet Name="FK__TaskProgr__grpMe__02925FBF" Association="Self.FK__TaskProgr__grpMe__02925FBF">
+      <End Role="GroupMember" EntitySet="GroupMember" />
+      <End Role="TaskProgress" EntitySet="TaskProgress" />
+    </AssociationSet>
+    <AssociationSet Name="FK__TaskProgr__task___019E3B86" Association="Self.FK__TaskProgr__task___019E3B86">
+      <End Role="Task" EntitySet="Task" />
+      <End Role="TaskProgress" EntitySet="TaskProgress" />
     </AssociationSet>
     <AssociationSet Name="FK__teacher__gid__6383C8BA" Association="Self.FK__teacher__gid__6383C8BA">
       <End Role="group" EntitySet="group" />

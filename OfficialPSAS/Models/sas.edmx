@@ -143,6 +143,7 @@
           <Property Name="description" Type="varchar(max)" />
           <Property Name="DueDate" Type="date" />
           <Property Name="gid" Type="int" />
+          <Property Name="filePath" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="TaskProgress">
           <Key>
@@ -943,6 +944,7 @@
           <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="DueDate" Type="DateTime" Precision="0" />
+          <Property Name="filePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="group" Relationship="Self.FK__Task__gid__7EC1CEDB" FromRole="Task" ToRole="group" />
           <NavigationProperty Name="TaskProgress" Relationship="Self.FK__TaskProgr__task___019E3B86" FromRole="Task" ToRole="TaskProgress" />
         </EntityType>
@@ -1183,7 +1185,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="OfficialSASEntities30" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="OfficialSASEntities31" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="AppointmentRequests" EntityType="Self.AppointmentRequests" />
           <EntitySet Name="group" EntityType="Self.group" />
           <EntitySet Name="GroupMember" EntityType="Self.GroupMember" />
@@ -1350,7 +1352,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities30">
+        <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities31">
           <EntitySetMapping Name="AppointmentRequests">
             <EntityTypeMapping TypeName="OfficialSASModel.AppointmentRequests">
               <MappingFragment StoreEntitySet="AppointmentRequests">
@@ -1476,6 +1478,7 @@
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="description" ColumnName="description" />
                 <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+                <ScalarProperty Name="filePath" ColumnName="filePath" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

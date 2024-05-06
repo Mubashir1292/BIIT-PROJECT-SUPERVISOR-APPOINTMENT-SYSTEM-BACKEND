@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities28">
+  <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities31">
     <EntitySetMapping Name="AppointmentRequests">
       <EntityTypeMapping TypeName="OfficialSASModel.AppointmentRequests">
         <MappingFragment StoreEntitySet="AppointmentRequests">
@@ -39,6 +39,16 @@
           <ScalarProperty Name="message_body" ColumnName="message_body" />
           <ScalarProperty Name="datetime" ColumnName="datetime" />
           <ScalarProperty Name="status" ColumnName="status" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Meeting">
+      <EntityTypeMapping TypeName="OfficialSASModel.Meeting">
+        <MappingFragment StoreEntitySet="Meeting">
+          <ScalarProperty Name="mid" ColumnName="mid" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="participantId" ColumnName="participantId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -88,6 +98,44 @@
           <ScalarProperty Name="cgpa" ColumnName="cgpa" />
           <ScalarProperty Name="Grade" ColumnName="Grade" />
           <ScalarProperty Name="image" ColumnName="image" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SupervisorGroupConnection">
+      <EntityTypeMapping TypeName="OfficialSASModel.SupervisorGroupConnection">
+        <MappingFragment StoreEntitySet="SupervisorGroupConnection">
+          <ScalarProperty Name="s_id" ColumnName="s_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sysdiagrams">
+      <EntityTypeMapping TypeName="OfficialSASModel.sysdiagrams">
+        <MappingFragment StoreEntitySet="sysdiagrams">
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+          <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="definition" ColumnName="definition" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Task">
+      <EntityTypeMapping TypeName="OfficialSASModel.Task">
+        <MappingFragment StoreEntitySet="Task">
+          <ScalarProperty Name="task_id" ColumnName="task_id" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+          <ScalarProperty Name="filePath" ColumnName="filePath" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TaskProgress">
+      <EntityTypeMapping TypeName="OfficialSASModel.TaskProgress">
+        <MappingFragment StoreEntitySet="TaskProgress">
+          <ScalarProperty Name="progress_id" ColumnName="progress_id" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="Comments" ColumnName="Comments" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -203,6 +251,24 @@
       </EndProperty>
       <Condition IsNull="false" ColumnName="gid" />
     </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__SupervisorG__gid__0E04126B" TypeName="OfficialSASModel.FK__SupervisorG__gid__0E04126B" StoreEntitySet="SupervisorGroupConnection">
+      <EndProperty Name="group">
+        <ScalarProperty Name="gid" ColumnName="gid" />
+      </EndProperty>
+      <EndProperty Name="SupervisorGroupConnection">
+        <ScalarProperty Name="s_id" ColumnName="s_id" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="gid" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__Task__gid__7EC1CEDB" TypeName="OfficialSASModel.FK__Task__gid__7EC1CEDB" StoreEntitySet="Task">
+      <EndProperty Name="group">
+        <ScalarProperty Name="gid" ColumnName="gid" />
+      </EndProperty>
+      <EndProperty Name="Task">
+        <ScalarProperty Name="task_id" ColumnName="task_id" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="gid" />
+    </AssociationSetMapping>
     <AssociationSetMapping Name="FK__teacher__gid__6383C8BA" TypeName="OfficialSASModel.FK__teacher__gid__6383C8BA" StoreEntitySet="teacher">
       <EndProperty Name="group">
         <ScalarProperty Name="gid" ColumnName="gid" />
@@ -220,6 +286,15 @@
         <ScalarProperty Name="st_id" ColumnName="st_id" />
       </EndProperty>
       <Condition IsNull="false" ColumnName="tecId" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__TaskProgr__grpMe__02925FBF" TypeName="OfficialSASModel.FK__TaskProgr__grpMe__02925FBF" StoreEntitySet="TaskProgress">
+      <EndProperty Name="GroupMember">
+        <ScalarProperty Name="st_id" ColumnName="grpMem" />
+      </EndProperty>
+      <EndProperty Name="TaskProgress">
+        <ScalarProperty Name="progress_id" ColumnName="progress_id" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="grpMem" />
     </AssociationSetMapping>
     <AssociationSetMapping Name="FK__Message__receive__681373AD" TypeName="OfficialSASModel.FK__Message__receive__681373AD" StoreEntitySet="groupRequests">
       <EndProperty Name="users">
@@ -247,6 +322,24 @@
         <ScalarProperty Name="message_id" ColumnName="message_id" />
       </EndProperty>
       <Condition IsNull="false" ColumnName="tecId" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__Meeting__created__7BE56230" TypeName="OfficialSASModel.FK__Meeting__created__7BE56230" StoreEntitySet="Meeting">
+      <EndProperty Name="users">
+        <ScalarProperty Name="uid" ColumnName="createdBy" />
+      </EndProperty>
+      <EndProperty Name="Meeting">
+        <ScalarProperty Name="mid" ColumnName="mid" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="createdBy" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__Meeting__Sch_id__7AF13DF7" TypeName="OfficialSASModel.FK__Meeting__Sch_id__7AF13DF7" StoreEntitySet="Meeting">
+      <EndProperty Name="Schedule">
+        <ScalarProperty Name="Sch_id" ColumnName="Sch_id" />
+      </EndProperty>
+      <EndProperty Name="Meeting">
+        <ScalarProperty Name="mid" ColumnName="mid" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="Sch_id" />
     </AssociationSetMapping>
     <AssociationSetMapping Name="FK__Project__p_Domai__1C873BEC" TypeName="OfficialSASModel.FK__Project__p_Domai__1C873BEC" StoreEntitySet="Project">
       <EndProperty Name="projectDomain">
@@ -328,6 +421,24 @@
         <ScalarProperty Name="st_id" ColumnName="st_id" />
       </EndProperty>
       <Condition IsNull="false" ColumnName="uid" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__SupervisorG__tid__0EF836A4" TypeName="OfficialSASModel.FK__SupervisorG__tid__0EF836A4" StoreEntitySet="SupervisorGroupConnection">
+      <EndProperty Name="teacher">
+        <ScalarProperty Name="tid" ColumnName="tid" />
+      </EndProperty>
+      <EndProperty Name="SupervisorGroupConnection">
+        <ScalarProperty Name="s_id" ColumnName="s_id" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="tid" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__TaskProgr__task___019E3B86" TypeName="OfficialSASModel.FK__TaskProgr__task___019E3B86" StoreEntitySet="TaskProgress">
+      <EndProperty Name="Task">
+        <ScalarProperty Name="task_id" ColumnName="task_id" />
+      </EndProperty>
+      <EndProperty Name="TaskProgress">
+        <ScalarProperty Name="progress_id" ColumnName="progress_id" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="task_id" />
     </AssociationSetMapping>
     <AssociationSetMapping Name="FK__teacher__uid__628FA481" TypeName="OfficialSASModel.FK__teacher__uid__628FA481" StoreEntitySet="teacher">
       <EndProperty Name="users">

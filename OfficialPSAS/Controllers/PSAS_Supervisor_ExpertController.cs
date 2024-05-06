@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
+using System.Web;
 using System.Net.Http;
 using System.Web.Http;
 using OfficialPSAS.Models;
@@ -13,7 +13,7 @@ namespace OfficialPSAS.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class PSAS_Supervisor_ExpertController : ApiController
     {
-        OfficialSASEntities30 db = new OfficialSASEntities30(); 
+        OfficialSASEntities31 db = new OfficialSASEntities31(); 
                 /*-------------------====================   Get All Notifications of relative supervisor    ==========-----------------------*/
         [HttpGet]
         public HttpResponseMessage GetAllNotifications(int teacher_id)
@@ -185,8 +185,8 @@ namespace OfficialPSAS.Controllers
         }
         /*-------------------------------------=========        Task Management    =========------------------------------------*/
         
-        /*-------------------------------------=========      Allocated Projects Dropdown     =========------------------------------------*/
 
+        /*-------------------------------------=========      Allocated Projects Dropdown     =========------------------------------------*/
         [HttpGet]
         public HttpResponseMessage AllocatedGroups(int teacher_id)
         {
@@ -218,8 +218,80 @@ namespace OfficialPSAS.Controllers
                 return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
             }
         }
+        /*-------------------------------===============   Assign new Task   =================--------------------------*/
+        [HttpPost]
+        public HttpResponseMessage AssignNewTask()
+        {
+            try
+            {
+                Task task = new Task();
+                var formData = HttpContext.Current.Request;
+                string title = formData.Form["title"];
+                var dueDate = formData.Form["dueDate"];
+                var postedFile = formData.Files["file"];
+                string description = formData.Form["description"];
+                // teacher , group finding 
+                string group_id = formData.Form["group_id"];
+                int gid = int.Parse(group_id);
+                string teacher_id = formData.Form["teacher_id"];
+                int teacherId = int.Parse(teacher_id);
+                var teacher = db.teacher.Where(s => s.tid == teacherId).FirstOrDefault();
+                if (teacher != null)
+                {
+                    // group finding
+                    var group = db.group.Where(s => s.gid == gid).FirstOrDefault();
+                    // checking group's supervisor
+                    var checkingSupervisorOfGroup = db.SupervisorGroupConnection.Where(s => s.group.gid == group.gid && s.teacher.tid == teacher.tid).FirstOrDefault();
+                    if (checkingSupervisorOfGroup != null)
+                    {
+                        if (group != null)
+                        {
+                            if (postedFile != null || postedFile.ContentLength != 0)
+                            {
+                                var filePath = HttpContext.Current.Server.MapPath("~/Content/Images/" + postedFile.FileName.Split('.')[0]);
+                                postedFile.SaveAs(filePath);
+                                task.filePath = postedFile.FileName.Split('.')[0];
+                            }
+                            else
+                            {
+                                task.filePath = null;
+                                return Request.CreateResponse("No file uploaded");
+                            }
+                            if (title != null && dueDate != null && description != null)
+                            {
+                                task.Title = title;
+                                task.DueDate = DateTime.Parse(dueDate);
+                                task.description = description;
+                                task.group = group;
+                                db.Task.Add(task);
+                                int RowsEffected = db.SaveChanges();
 
-
+                                return Request.CreateResponse("New Task Added  " + RowsEffected);
+                            }
+                            else
+                            {
+                                return Request.CreateResponse("Fields must be filled");
+                            }
+                        }
+                        else
+                        {
+                            return Request.CreateResponse("group Not Founded");
+                        }
+                    }
+                    else
+                    {
+                        return Request.CreateResponse("Group and teacher not Matched");
+                    }
+                }
+                else
+                {
+                    return Request.CreateResponse("Teacher Not Founded");
+                }
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
+            }
+        }
 
     }
 }
