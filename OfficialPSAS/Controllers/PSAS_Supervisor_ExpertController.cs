@@ -292,6 +292,163 @@ namespace OfficialPSAS.Controllers
                 return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
             }
         }
+        /*-------------------------------==============  Fetching All Tasks  for dropdown ===============-------------------------*/
+        [HttpGet]
+        public HttpResponseMessage AllTasks(int gid)
+        {
+            try
+            {
+                var group = db.group.Where(s => s.gid == gid).FirstOrDefault();
+                if (group != null)
+                {
+                    var allTasks = (from task in db.Task
+                                    join progressTask in db.TaskProgress on task.task_id equals progressTask.Task.task_id
+                                                    into joinedTasks
+                                    from progressTask in joinedTasks.DefaultIfEmpty()
+                                    where progressTask == null
+                                    select new
+                                    {
+                                       label=task.task_id,
+                                        value=task.Title,                                        
+                                    }).Distinct().ToList();
+                    if (allTasks.Count > 0)
+                    {
+                        return Request.CreateResponse(allTasks);
+                    }
+                    else
+                    {
+                        return Request.CreateResponse(allTasks);
+                    }
+                }
+                else
+                {
+                    return Request.CreateResponse("Group Not Founded");
+                }
+
+
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
+            }
+        }
+        /*-------------------------------==============  Fetching Single Task  Entering Details ===============-------------------------*/
+        [HttpGet]
+        public HttpResponseMessage SingleTask(int task_id)
+        {
+            try
+            {
+                Dictionary<string, object> AllDetails = new Dictionary<string, object>();
+                List<groupMembersDetails> allGroupMembers = new List<groupMembersDetails>();
+                var task = db.Task.Where(s => s.task_id == task_id).Select(s => new
+                {
+                    s.task_id,
+                    s.Title,
+                    s.group.gid
+                }).FirstOrDefault();
+                if (task != null)
+                {
+                    var groupMembers = db.GroupMember.Where(s => s.group.gid == task.gid).Distinct().ToList();
+                    if (groupMembers.Count > 0)
+                    {
+                        foreach(var member in groupMembers)
+                        {
+                            groupMembersDetails gm = new groupMembersDetails();
+                            gm.st_id = member.st_id;
+                            gm.name = member.Student.users.username;
+                            gm.technology = member.Technology.name;
+                            gm.cgpa = (double)member.Student.cgpa;
+                            gm.grade = member.Student.Grade;
+                            gm.semester = member.Student.semester;
+                            gm.section = member.Student.section;
+                            allGroupMembers.Add(gm);
+                        }
+                        AllDetails["groupMembers"] = allGroupMembers;
+                        return Request.CreateResponse(AllDetails);
+                    }
+                    else
+                    {
+                        return Request.CreateResponse("Group Members not Founded");
+                    }
+                }
+                else
+                {
+                    return Request.CreateResponse("Task Not Found");
+                }
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
+            }
+        }
+        /*-------------------------------==============  Entering Details of Task in Task Progress   ===============-------------------------*/
+        public class TaskProgressData
+        {
+            public int task_id { get; set; }
+            public List<TaskProgressRequest> ProgressTasksList { get; set; }
+        }
+        [HttpPost]
+        public HttpResponseMessage CheckingTask([FromBody] TaskProgressData taskProgressData)
+        {
+            try
+            {
+                int task_id = taskProgressData.task_id;
+                var Task = db.Task.Where(s => s.task_id == task_id).FirstOrDefault();
+                if (Task != null)
+                {
+                    var checkingStatus = db.TaskProgress.Where(s => s.Task.task_id == Task.task_id && s.status == 1).FirstOrDefault();
+                    if (checkingStatus == null)
+                    {
+                        var group = db.group.Where(s => s.gid == Task.group.gid).FirstOrDefault();
+                        if (group != null)
+                        {
+                            foreach (var progress in taskProgressData.ProgressTasksList)
+                            {
+                                var groupMembers = db.GroupMember.Where(s => s.group.gid == group.gid).Distinct().ToList();
+                                if (groupMembers.Count == taskProgressData.ProgressTasksList.Count)
+                                {
+                                    foreach (var member in groupMembers)
+                                    {
+                                        if (progress.Comments != null)
+                                        {
+                                            TaskProgress taskProgress = new TaskProgress();
+                                            taskProgress.Task = Task;
+                                            taskProgress.GroupMember = member;
+                                            taskProgress.status = progress.Status;
+                                            taskProgress.Comments = progress.Comments;
+                                            db.TaskProgress.Add(taskProgress);
+                                        }
+                                        else
+                                        {
+                                            return Request.CreateResponse("fields must not be empty");
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    return Request.CreateResponse("group Members not ");
+                                }
+                            }                        
+                        }
+                        else
+                        {
+                            return Request.CreateResponse("Group Members Not Found");
+                        }
+                        int RowsEffected = db.SaveChanges();
+                        return Request.CreateResponse("Progress Added  " + RowsEffected);
+                    }
+                    else
+                    {
+                        return Request.CreateResponse("Task Already Approved");
+                    }
+                }
+                else
+                {
+                    return Request.CreateResponse("Task Not Founded");
+                }
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
+            }
+        }
 
     }
 }

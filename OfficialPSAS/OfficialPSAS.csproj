@@ -193,6 +193,7 @@
     <Compile Include="Models\TaskProgress.cs">
       <DependentUpon>sas.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TaskProgressRequest.cs" />
     <Compile Include="Models\teacher.cs">
       <DependentUpon>sas.tt</DependentUpon>
     </Compile>
