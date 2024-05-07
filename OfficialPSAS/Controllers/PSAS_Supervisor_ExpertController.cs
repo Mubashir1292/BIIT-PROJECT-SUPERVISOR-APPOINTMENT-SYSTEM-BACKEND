@@ -400,37 +400,34 @@ namespace OfficialPSAS.Controllers
                         var group = db.group.Where(s => s.gid == Task.group.gid).FirstOrDefault();
                         if (group != null)
                         {
-                            foreach (var progress in taskProgressData.ProgressTasksList)
-                            {
-                                var groupMembers = db.GroupMember.Where(s => s.group.gid == group.gid).Distinct().ToList();
-                                if (groupMembers.Count == taskProgressData.ProgressTasksList.Count)
+                                foreach (var progress in taskProgressData.ProgressTasksList)
                                 {
-                                    foreach (var member in groupMembers)
+                                    if (progress.Comments != null)
                                     {
-                                        if (progress.Comments != null)
+                                        TaskProgress taskProgress = new TaskProgress();
+                                        taskProgress.Task = Task;
+                                        taskProgress.status = progress.Status;
+                                        taskProgress.Comments = progress.Comments;
+                                        var member = db.GroupMember.Where(s => s.Student.st_id == progress.GroupMemberId).FirstOrDefault();
+                                        if (member != null)
                                         {
-                                            TaskProgress taskProgress = new TaskProgress();
-                                            taskProgress.Task = Task;
                                             taskProgress.GroupMember = member;
-                                            taskProgress.status = progress.Status;
-                                            taskProgress.Comments = progress.Comments;
                                             db.TaskProgress.Add(taskProgress);
                                         }
                                         else
                                         {
-                                            return Request.CreateResponse("fields must not be empty");
+                                            return Request.CreateResponse("Group member not found for progress item");
                                         }
                                     }
+                                    else
+                                    {
+                                        return Request.CreateResponse("Fields must not be empty");
+                                    }
                                 }
-                                else
-                                {
-                                    return Request.CreateResponse("group Members not ");
-                                }
-                            }                        
                         }
                         else
                         {
-                            return Request.CreateResponse("Group Members Not Found");
+                            return Request.CreateResponse("Group Not Found");
                         }
                         int RowsEffected = db.SaveChanges();
                         return Request.CreateResponse("Progress Added  " + RowsEffected);
@@ -442,13 +439,56 @@ namespace OfficialPSAS.Controllers
                 }
                 else
                 {
-                    return Request.CreateResponse("Task Not Founded");
+                    return Request.CreateResponse("Task Not Found");
+                }
+            }
+            catch (Exception cp)
+            {
+                return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
+            }
+        }
+         /*---------------------==========  Get the Progress  ============-------------------------*/
+        [HttpGet]
+        public HttpResponseMessage ProgressDetails(int gid)
+        {
+            try
+            {
+                List<object> allDetails = new List<object>();
+                var allTasks = db.Task.Where(s => s.group.gid == gid).Distinct().ToList();
+                if (allTasks != null)
+                {
+                    foreach(var task in allTasks)
+                    {
+                        var TaskProgresses = db.TaskProgress.Where(s => s.Task.task_id == task.task_id&&s.Comments.Length>0).Distinct().ToList();
+                        if (TaskProgresses.Count > 0)
+                        {
+                            foreach (var progress in TaskProgresses)
+                            {
+                                var response = new
+                                {
+                                    progress.Task.task_id,
+                                    progress.GroupMember.st_id,
+                                    progress.status,
+                                    progress.Comments
+                                };
+                                allDetails.Add(response);
+                            }
+                        }
+                        else
+                        {
+                            return Request.CreateResponse("Not Found");
+                        }
+                    }
+                    return Request.CreateResponse(allDetails);
+                }
+                else
+                {
+                    return Request.CreateResponse("");
                 }
             }catch(Exception cp)
             {
                 return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
             }
         }
-
     }
 }
