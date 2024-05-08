@@ -17,6 +17,7 @@ namespace OfficialPSAS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Schedule()
         {
+            this.AppointmentRequests = new HashSet<AppointmentRequests>();
             this.Meeting = new HashSet<Meeting>();
             this.teacher1 = new HashSet<teacher>();
         }
@@ -25,6 +26,8 @@ namespace OfficialPSAS.Models
         public string Day { get; set; }
         public Nullable<int> status { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AppointmentRequests> AppointmentRequests { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Meeting> Meeting { get; set; }
         public virtual TimeSlots TimeSlots { get; set; }

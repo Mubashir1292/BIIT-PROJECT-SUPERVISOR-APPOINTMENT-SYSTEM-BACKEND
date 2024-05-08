@@ -1,12 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities34">
+  <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities36">
     <EntitySetMapping Name="AppointmentRequests">
       <EntityTypeMapping TypeName="OfficialSASModel.AppointmentRequests">
         <MappingFragment StoreEntitySet="AppointmentRequests">
           <ScalarProperty Name="aid" ColumnName="aid" />
-          <ScalarProperty Name="RequestedBy" ColumnName="RequestedBy" />
-          <ScalarProperty Name="Sch_id" ColumnName="Sch_id" />
           <ScalarProperty Name="status" ColumnName="status" />
           <ScalarProperty Name="message" ColumnName="message" />
         </MappingFragment>
@@ -190,14 +188,32 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <AssociationSetMapping Name="FK__Appointme__Reque__7C4F7684" TypeName="OfficialSASModel.FK__Appointme__Reque__7C4F7684" StoreEntitySet="AppointmentRequests">
-      <EndProperty Name="users">
-        <ScalarProperty Name="uid" ColumnName="RequestedTo" />
+    <AssociationSetMapping Name="FK__Appointme__Reque__39E294A9" TypeName="OfficialSASModel.FK__Appointme__Reque__39E294A9" StoreEntitySet="AppointmentRequests">
+      <EndProperty Name="teacher">
+        <ScalarProperty Name="tid" ColumnName="RequestedTo" />
       </EndProperty>
       <EndProperty Name="AppointmentRequests">
         <ScalarProperty Name="aid" ColumnName="aid" />
       </EndProperty>
       <Condition IsNull="false" ColumnName="RequestedTo" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__Appointme__Reque__3AD6B8E2" TypeName="OfficialSASModel.FK__Appointme__Reque__3AD6B8E2" StoreEntitySet="AppointmentRequests">
+      <EndProperty Name="Student">
+        <ScalarProperty Name="st_id" ColumnName="RequestedBy" />
+      </EndProperty>
+      <EndProperty Name="AppointmentRequests">
+        <ScalarProperty Name="aid" ColumnName="aid" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="RequestedBy" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__Appointme__Sch_i__3BCADD1B" TypeName="OfficialSASModel.FK__Appointme__Sch_i__3BCADD1B" StoreEntitySet="AppointmentRequests">
+      <EndProperty Name="Schedule">
+        <ScalarProperty Name="Sch_id" ColumnName="Sch_id" />
+      </EndProperty>
+      <EndProperty Name="AppointmentRequests">
+        <ScalarProperty Name="aid" ColumnName="aid" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="Sch_id" />
     </AssociationSetMapping>
     <AssociationSetMapping Name="FK__group__Created_b__5FB337D6" TypeName="OfficialSASModel.FK__group__Created_b__5FB337D6" StoreEntitySet="group">
       <EndProperty Name="users">

@@ -14,7 +14,7 @@ namespace OfficialPSAS.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class PSASController : ApiController
     {
-        OfficialSASEntities34 db = new OfficialSASEntities34();
+        OfficialSASEntities36 db = new OfficialSASEntities36();
         /*public string  CheckForTechnicalExpert(string tid)
         {
             var teacherAndTechnicalExpertSame = from t in db.teacher
@@ -1382,20 +1382,27 @@ namespace OfficialPSAS.Controllers
             try
             {
                 var findingTechnicalExpert = db.TechnicalExpertTechnology.Where(s => s.TechnologyExpert.teacher.tid == teacher_id).Select(s => s.TechnologyExpert.teacher.tid).FirstOrDefault();
-                var findingTheDaysAndTimeSlots = db.Schedule.Where(s => s.teacher.tid == teacher_id && s.Day == day && s.status == 0).Select(s => new
+                if (findingTechnicalExpert != null)
                 {
-                    s.TimeSlots.id,
-                    s.TimeSlots.start_time,
-                    s.TimeSlots.end_time,
-                    s.Sch_id
-                }).ToList();
-                if(findingTheDaysAndTimeSlots.Count > 0)
-                {
-                    return Request.CreateResponse(findingTheDaysAndTimeSlots);
+                    var findingTheDaysAndTimeSlots = db.Schedule.Where(s => s.teacher.tid == teacher_id && s.Day == day && s.status == 0).Select(s => new
+                    {
+                        s.TimeSlots.id,
+                        s.TimeSlots.start_time,
+                        s.TimeSlots.end_time,
+                        s.Sch_id
+                    }).ToList();
+                    if (findingTheDaysAndTimeSlots.Count > 0)
+                    {
+                        return Request.CreateResponse(findingTheDaysAndTimeSlots);
+                    }
+                    else
+                    {
+                        return Request.CreateResponse("Not Found any Time Slot on " + day);
+                    }
                 }
                 else
                 {
-                    return Request.CreateResponse("");
+                    return Request.CreateResponse("Not Found Technical Expert on id "+teacher_id);
                 }
             }
             catch (Exception cp)
@@ -1411,33 +1418,38 @@ namespace OfficialPSAS.Controllers
             {
                 AppointmentRequests ar = new AppointmentRequests();
                 var findingStudent = db.Student.Where(s => s.st_id == regNo).FirstOrDefault();
-                var teacherFinding = db.teacher.Where(s => s.tid == teacher_id).Select(s => s.users).FirstOrDefault();
+                var teacherFinding = db.teacher.Where(s => s.tid == teacher_id).FirstOrDefault();
                 if (teacherFinding != null)
                 {
-                    var ScheduleFinding = db.Schedule.Where(s => s.Sch_id == sch_Id).FirstOrDefault();
+                    var ScheduleFinding = db.Schedule.Where(s => s.Sch_id == sch_Id && s.status==0).FirstOrDefault();
                     if(ScheduleFinding != null)
                     {
-                        ar.users = teacherFinding;
-                        ar.RequestedBy = findingStudent.st_id;
-                        //ar.Schedule = ScheduleFinding;
+                        ar.teacher = teacherFinding;
+                        ar.Student = findingStudent;
+                        ar.Schedule = ScheduleFinding;
                         ar.status = 0;
                         ar.message = message;
                         db.AppointmentRequests.Add(ar);
+                        ScheduleFinding.status = 1;
+                        db.SaveChanges();
+                        return Request.CreateResponse("set the Appointment");
                     }
                     else
                     {
-                        return Request.CreateResponse("");
+                        return Request.CreateResponse("Not founded any Slot");
                     }
                 }
-                db.SaveChanges();
-                return Request.CreateResponse("set the Appointment");
+                else
+                {
+                    return Request.CreateResponse("Teacher not founded");
+                }
+
             }
             catch(Exception cp)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError,cp.Message+":"+cp.InnerException);
             }
         }
-
         //------------------------------------------------- Joining Group Request ---------------------------------------------
         // finding groups which dont have that particular technology
         [HttpGet]
@@ -1555,7 +1567,6 @@ namespace OfficialPSAS.Controllers
                 return Request.CreateResponse(cp.Message+":"+cp.InnerException);
             }
         }
-       
         // posting the Request for joining 
         [HttpPost]
         public HttpResponseMessage PostingRequestForGroupJoining(string regNo,int gid,int tecId,string message)

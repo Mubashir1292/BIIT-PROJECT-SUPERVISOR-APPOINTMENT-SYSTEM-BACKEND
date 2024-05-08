@@ -14,6 +14,12 @@ namespace OfficialPSAS.Models
     
     public partial class Student
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Student()
+        {
+            this.AppointmentRequests = new HashSet<AppointmentRequests>();
+        }
+    
         public string st_id { get; set; }
         public string semester { get; set; }
         public string section { get; set; }
@@ -21,6 +27,8 @@ namespace OfficialPSAS.Models
         public string Grade { get; set; }
         public string image { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AppointmentRequests> AppointmentRequests { get; set; }
         public virtual GroupMember GroupMember { get; set; }
         public virtual users users { get; set; }
     }

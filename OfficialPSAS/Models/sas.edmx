@@ -10,11 +10,11 @@
             <PropertyRef Name="aid" />
           </Key>
           <Property Name="aid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="RequestedTo" Type="varchar" MaxLength="100" />
+          <Property Name="RequestedTo" Type="int" />
           <Property Name="RequestedBy" Type="varchar" MaxLength="100" />
-          <Property Name="Sch_id" Type="int" />
           <Property Name="status" Type="int" />
           <Property Name="message" Type="varchar(max)" />
+          <Property Name="Sch_id" Type="int" />
         </EntityType>
         <EntityType Name="group">
           <Key>
@@ -207,15 +207,39 @@
           <Property Name="password" Type="varchar" MaxLength="50" />
           <Property Name="role" Type="varchar" MaxLength="50" />
         </EntityType>
-        <Association Name="FK__Appointme__Reque__7C4F7684">
-          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+        <Association Name="FK__Appointme__Reque__39E294A9">
+          <End Role="teacher" Type="Self.teacher" Multiplicity="0..1" />
           <End Role="AppointmentRequests" Type="Self.AppointmentRequests" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="users">
-              <PropertyRef Name="uid" />
+            <Principal Role="teacher">
+              <PropertyRef Name="tid" />
             </Principal>
             <Dependent Role="AppointmentRequests">
               <PropertyRef Name="RequestedTo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Appointme__Reque__3AD6B8E2">
+          <End Role="Student" Type="Self.Student" Multiplicity="0..1" />
+          <End Role="AppointmentRequests" Type="Self.AppointmentRequests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="st_id" />
+            </Principal>
+            <Dependent Role="AppointmentRequests">
+              <PropertyRef Name="RequestedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Appointme__Sch_i__3BCADD1B">
+          <End Role="Schedule" Type="Self.Schedule" Multiplicity="0..1" />
+          <End Role="AppointmentRequests" Type="Self.AppointmentRequests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Schedule">
+              <PropertyRef Name="Sch_id" />
+            </Principal>
+            <Dependent Role="AppointmentRequests">
+              <PropertyRef Name="Sch_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -648,8 +672,16 @@
           <EntitySet Name="TechnologyExpert" EntityType="Self.TechnologyExpert" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TimeSlots" EntityType="Self.TimeSlots" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__Appointme__Reque__7C4F7684" Association="Self.FK__Appointme__Reque__7C4F7684">
-            <End Role="users" EntitySet="users" />
+          <AssociationSet Name="FK__Appointme__Reque__39E294A9" Association="Self.FK__Appointme__Reque__39E294A9">
+            <End Role="teacher" EntitySet="teacher" />
+            <End Role="AppointmentRequests" EntitySet="AppointmentRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Appointme__Reque__3AD6B8E2" Association="Self.FK__Appointme__Reque__3AD6B8E2">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="AppointmentRequests" EntitySet="AppointmentRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Appointme__Sch_i__3BCADD1B" Association="Self.FK__Appointme__Sch_i__3BCADD1B">
+            <End Role="Schedule" EntitySet="Schedule" />
             <End Role="AppointmentRequests" EntitySet="AppointmentRequests" />
           </AssociationSet>
           <AssociationSet Name="FK__group__Created_b__5FB337D6" Association="Self.FK__group__Created_b__5FB337D6">
@@ -799,11 +831,11 @@
             <PropertyRef Name="aid" />
           </Key>
           <Property Name="aid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RequestedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Sch_id" Type="Int32" />
           <Property Name="status" Type="Int32" />
           <Property Name="message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="users" Relationship="Self.FK__Appointme__Reque__7C4F7684" FromRole="AppointmentRequests" ToRole="users" />
+          <NavigationProperty Name="teacher" Relationship="Self.FK__Appointme__Reque__39E294A9" FromRole="AppointmentRequests" ToRole="teacher" />
+          <NavigationProperty Name="Student" Relationship="Self.FK__Appointme__Reque__3AD6B8E2" FromRole="AppointmentRequests" ToRole="Student" />
+          <NavigationProperty Name="Schedule" Relationship="Self.FK__Appointme__Sch_i__3BCADD1B" FromRole="AppointmentRequests" ToRole="Schedule" />
         </EntityType>
         <EntityType Name="group">
           <Key>
@@ -904,6 +936,7 @@
           <Property Name="Sch_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Day" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="status" Type="Int32" />
+          <NavigationProperty Name="AppointmentRequests" Relationship="Self.FK__Appointme__Sch_i__3BCADD1B" FromRole="Schedule" ToRole="AppointmentRequests" />
           <NavigationProperty Name="Meeting" Relationship="Self.FK__Meeting__Sch_id__2E70E1FD" FromRole="Schedule" ToRole="Meeting" />
           <NavigationProperty Name="TimeSlots" Relationship="Self.FK__Schedule__slotId__29AC2CE0" FromRole="Schedule" ToRole="TimeSlots" />
           <NavigationProperty Name="teacher" Relationship="Self.FK__Schedule__tid__2AA05119" FromRole="Schedule" ToRole="teacher" />
@@ -919,6 +952,7 @@
           <Property Name="cgpa" Type="Double" />
           <Property Name="Grade" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="image" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="AppointmentRequests" Relationship="Self.FK__Appointme__Reque__3AD6B8E2" FromRole="Student" ToRole="AppointmentRequests" />
           <NavigationProperty Name="GroupMember" Relationship="Self.FK__GroupMemb__st_id__625A9A57" FromRole="Student" ToRole="GroupMember" />
           <NavigationProperty Name="users" Relationship="Self.FK__Student__uid__5CD6CB2B" FromRole="Student" ToRole="users" />
         </EntityType>
@@ -968,6 +1002,7 @@
           </Key>
           <Property Name="tid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Ap_Id" Type="Int32" />
+          <NavigationProperty Name="AppointmentRequests" Relationship="Self.FK__Appointme__Reque__39E294A9" FromRole="teacher" ToRole="AppointmentRequests" />
           <NavigationProperty Name="group" Relationship="Self.FK__teacher__gid__6383C8BA" FromRole="teacher" ToRole="group" />
           <NavigationProperty Name="Meeting" Relationship="Self.FK__Meeting__created__30592A6F" FromRole="teacher" ToRole="Meeting" />
           <NavigationProperty Name="Project" Relationship="Self.FK__Project__tid__0880433F" FromRole="teacher" ToRole="Project" />
@@ -1024,7 +1059,6 @@
           <Property Name="username" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="role" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="AppointmentRequests" Relationship="Self.FK__Appointme__Reque__7C4F7684" FromRole="users" ToRole="AppointmentRequests" />
           <NavigationProperty Name="group" Relationship="Self.FK__group__Created_b__5FB337D6" FromRole="users" ToRole="group" />
           <NavigationProperty Name="groupRequests" Relationship="Self.FK__Message__receive__681373AD" FromRole="users" ToRole="groupRequests" />
           <NavigationProperty Name="groupRequests1" Relationship="Self.FK__Message__sender__671F4F74" FromRole="users" ToRole="groupRequests" />
@@ -1033,8 +1067,16 @@
           <NavigationProperty Name="teacher" Relationship="Self.FK__teacher__uid__628FA481" FromRole="users" ToRole="teacher" />
           <NavigationProperty Name="TechnologyExpert" Relationship="Self.FK__TechnologyEx__id__57A801BA" FromRole="users" ToRole="TechnologyExpert" />
         </EntityType>
-        <Association Name="FK__Appointme__Reque__7C4F7684">
-          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+        <Association Name="FK__Appointme__Reque__39E294A9">
+          <End Role="teacher" Type="Self.teacher" Multiplicity="0..1" />
+          <End Role="AppointmentRequests" Type="Self.AppointmentRequests" Multiplicity="*" />
+        </Association>
+        <Association Name="FK__Appointme__Reque__3AD6B8E2">
+          <End Role="Student" Type="Self.Student" Multiplicity="0..1" />
+          <End Role="AppointmentRequests" Type="Self.AppointmentRequests" Multiplicity="*" />
+        </Association>
+        <Association Name="FK__Appointme__Sch_i__3BCADD1B">
+          <End Role="Schedule" Type="Self.Schedule" Multiplicity="0..1" />
           <End Role="AppointmentRequests" Type="Self.AppointmentRequests" Multiplicity="*" />
         </Association>
         <Association Name="FK__group__Created_b__5FB337D6">
@@ -1189,7 +1231,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="OfficialSASEntities34" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="OfficialSASEntities36" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="AppointmentRequests" EntityType="Self.AppointmentRequests" />
           <EntitySet Name="group" EntityType="Self.group" />
           <EntitySet Name="GroupMember" EntityType="Self.GroupMember" />
@@ -1210,8 +1252,16 @@
           <EntitySet Name="TechnologyExpert" EntityType="Self.TechnologyExpert" />
           <EntitySet Name="TimeSlots" EntityType="Self.TimeSlots" />
           <EntitySet Name="users" EntityType="Self.users" />
-          <AssociationSet Name="FK__Appointme__Reque__7C4F7684" Association="Self.FK__Appointme__Reque__7C4F7684">
-            <End Role="users" EntitySet="users" />
+          <AssociationSet Name="FK__Appointme__Reque__39E294A9" Association="Self.FK__Appointme__Reque__39E294A9">
+            <End Role="teacher" EntitySet="teacher" />
+            <End Role="AppointmentRequests" EntitySet="AppointmentRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Appointme__Reque__3AD6B8E2" Association="Self.FK__Appointme__Reque__3AD6B8E2">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="AppointmentRequests" EntitySet="AppointmentRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Appointme__Sch_i__3BCADD1B" Association="Self.FK__Appointme__Sch_i__3BCADD1B">
+            <End Role="Schedule" EntitySet="Schedule" />
             <End Role="AppointmentRequests" EntitySet="AppointmentRequests" />
           </AssociationSet>
           <AssociationSet Name="FK__group__Created_b__5FB337D6" Association="Self.FK__group__Created_b__5FB337D6">
@@ -1356,13 +1406,11 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities34">
+        <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities36">
           <EntitySetMapping Name="AppointmentRequests">
             <EntityTypeMapping TypeName="OfficialSASModel.AppointmentRequests">
               <MappingFragment StoreEntitySet="AppointmentRequests">
                 <ScalarProperty Name="aid" ColumnName="aid" />
-                <ScalarProperty Name="RequestedBy" ColumnName="RequestedBy" />
-                <ScalarProperty Name="Sch_id" ColumnName="Sch_id" />
                 <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="message" ColumnName="message" />
               </MappingFragment>
@@ -1546,14 +1594,32 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="FK__Appointme__Reque__7C4F7684" TypeName="OfficialSASModel.FK__Appointme__Reque__7C4F7684" StoreEntitySet="AppointmentRequests">
-            <EndProperty Name="users">
-              <ScalarProperty Name="uid" ColumnName="RequestedTo" />
+          <AssociationSetMapping Name="FK__Appointme__Reque__39E294A9" TypeName="OfficialSASModel.FK__Appointme__Reque__39E294A9" StoreEntitySet="AppointmentRequests">
+            <EndProperty Name="teacher">
+              <ScalarProperty Name="tid" ColumnName="RequestedTo" />
             </EndProperty>
             <EndProperty Name="AppointmentRequests">
               <ScalarProperty Name="aid" ColumnName="aid" />
             </EndProperty>
             <Condition IsNull="false" ColumnName="RequestedTo" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK__Appointme__Reque__3AD6B8E2" TypeName="OfficialSASModel.FK__Appointme__Reque__3AD6B8E2" StoreEntitySet="AppointmentRequests">
+            <EndProperty Name="Student">
+              <ScalarProperty Name="st_id" ColumnName="RequestedBy" />
+            </EndProperty>
+            <EndProperty Name="AppointmentRequests">
+              <ScalarProperty Name="aid" ColumnName="aid" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="RequestedBy" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK__Appointme__Sch_i__3BCADD1B" TypeName="OfficialSASModel.FK__Appointme__Sch_i__3BCADD1B" StoreEntitySet="AppointmentRequests">
+            <EndProperty Name="Schedule">
+              <ScalarProperty Name="Sch_id" ColumnName="Sch_id" />
+            </EndProperty>
+            <EndProperty Name="AppointmentRequests">
+              <ScalarProperty Name="aid" ColumnName="aid" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="Sch_id" />
           </AssociationSetMapping>
           <AssociationSetMapping Name="FK__group__Created_b__5FB337D6" TypeName="OfficialSASModel.FK__group__Created_b__5FB337D6" StoreEntitySet="group">
             <EndProperty Name="users">

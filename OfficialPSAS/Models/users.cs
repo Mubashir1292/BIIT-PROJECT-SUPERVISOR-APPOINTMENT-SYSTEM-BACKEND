@@ -17,7 +17,6 @@ namespace OfficialPSAS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public users()
         {
-            this.AppointmentRequests = new HashSet<AppointmentRequests>();
             this.group = new HashSet<group>();
             this.groupRequests = new HashSet<groupRequests>();
             this.groupRequests1 = new HashSet<groupRequests>();
@@ -31,8 +30,6 @@ namespace OfficialPSAS.Models
         public string password { get; set; }
         public string role { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AppointmentRequests> AppointmentRequests { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<group> group { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

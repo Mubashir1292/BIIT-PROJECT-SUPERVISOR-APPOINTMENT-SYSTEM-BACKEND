@@ -15,11 +15,11 @@ namespace OfficialPSAS.Models
     public partial class AppointmentRequests
     {
         public int aid { get; set; }
-        public string RequestedBy { get; set; }
-        public Nullable<int> Sch_id { get; set; }
         public Nullable<int> status { get; set; }
         public string message { get; set; }
     
-        public virtual users users { get; set; }
+        public virtual teacher teacher { get; set; }
+        public virtual Student Student { get; set; }
+        public virtual Schedule Schedule { get; set; }
     }
 }

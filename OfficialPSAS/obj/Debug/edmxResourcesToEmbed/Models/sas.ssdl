@@ -5,11 +5,11 @@
       <PropertyRef Name="aid" />
     </Key>
     <Property Name="aid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="RequestedTo" Type="varchar" MaxLength="100" />
+    <Property Name="RequestedTo" Type="int" />
     <Property Name="RequestedBy" Type="varchar" MaxLength="100" />
-    <Property Name="Sch_id" Type="int" />
     <Property Name="status" Type="int" />
     <Property Name="message" Type="varchar(max)" />
+    <Property Name="Sch_id" Type="int" />
   </EntityType>
   <EntityType Name="group">
     <Key>
@@ -202,15 +202,39 @@
     <Property Name="password" Type="varchar" MaxLength="50" />
     <Property Name="role" Type="varchar" MaxLength="50" />
   </EntityType>
-  <Association Name="FK__Appointme__Reque__7C4F7684">
-    <End Role="users" Type="Self.users" Multiplicity="0..1" />
+  <Association Name="FK__Appointme__Reque__39E294A9">
+    <End Role="teacher" Type="Self.teacher" Multiplicity="0..1" />
     <End Role="AppointmentRequests" Type="Self.AppointmentRequests" Multiplicity="*" />
     <ReferentialConstraint>
-      <Principal Role="users">
-        <PropertyRef Name="uid" />
+      <Principal Role="teacher">
+        <PropertyRef Name="tid" />
       </Principal>
       <Dependent Role="AppointmentRequests">
         <PropertyRef Name="RequestedTo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Appointme__Reque__3AD6B8E2">
+    <End Role="Student" Type="Self.Student" Multiplicity="0..1" />
+    <End Role="AppointmentRequests" Type="Self.AppointmentRequests" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Student">
+        <PropertyRef Name="st_id" />
+      </Principal>
+      <Dependent Role="AppointmentRequests">
+        <PropertyRef Name="RequestedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Appointme__Sch_i__3BCADD1B">
+    <End Role="Schedule" Type="Self.Schedule" Multiplicity="0..1" />
+    <End Role="AppointmentRequests" Type="Self.AppointmentRequests" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Schedule">
+        <PropertyRef Name="Sch_id" />
+      </Principal>
+      <Dependent Role="AppointmentRequests">
+        <PropertyRef Name="Sch_id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -643,8 +667,16 @@
     <EntitySet Name="TechnologyExpert" EntityType="Self.TechnologyExpert" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="TimeSlots" EntityType="Self.TimeSlots" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
-    <AssociationSet Name="FK__Appointme__Reque__7C4F7684" Association="Self.FK__Appointme__Reque__7C4F7684">
-      <End Role="users" EntitySet="users" />
+    <AssociationSet Name="FK__Appointme__Reque__39E294A9" Association="Self.FK__Appointme__Reque__39E294A9">
+      <End Role="teacher" EntitySet="teacher" />
+      <End Role="AppointmentRequests" EntitySet="AppointmentRequests" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Appointme__Reque__3AD6B8E2" Association="Self.FK__Appointme__Reque__3AD6B8E2">
+      <End Role="Student" EntitySet="Student" />
+      <End Role="AppointmentRequests" EntitySet="AppointmentRequests" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Appointme__Sch_i__3BCADD1B" Association="Self.FK__Appointme__Sch_i__3BCADD1B">
+      <End Role="Schedule" EntitySet="Schedule" />
       <End Role="AppointmentRequests" EntitySet="AppointmentRequests" />
     </AssociationSet>
     <AssociationSet Name="FK__group__Created_b__5FB337D6" Association="Self.FK__group__Created_b__5FB337D6">

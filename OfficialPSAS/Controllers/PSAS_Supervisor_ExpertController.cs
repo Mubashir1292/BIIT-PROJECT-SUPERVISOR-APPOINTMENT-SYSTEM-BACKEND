@@ -13,7 +13,7 @@ namespace OfficialPSAS.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class PSAS_Supervisor_ExpertController : ApiController
     {
-        OfficialSASEntities34 db = new OfficialSASEntities34(); 
+        OfficialSASEntities36 db = new OfficialSASEntities36(); 
                 /*-------------------====================   Get All Notifications of relative supervisor    ==========-----------------------*/
         [HttpGet]
         public HttpResponseMessage GetAllNotifications(int teacher_id)
@@ -543,7 +543,10 @@ namespace OfficialPSAS.Controllers
                 var Schedule = db.Schedule.Where(s => s.Sch_id == Sch_id && s.status==0 ).FirstOrDefault();
                 if (Schedule != null)
                 {
-                        var group = db.group.Where(s => s.gid == participant_Id && s.tid==Schedule.teacher.tid).FirstOrDefault();
+                    string day = date.DayOfWeek.ToString();
+                    if (day == Schedule.Day)
+                    {
+                        var group = db.group.Where(s => s.gid == participant_Id && s.tid == Schedule.teacher.tid).FirstOrDefault();
                         if (group != null)
                         {
                             if (title != null || description != null)
@@ -568,8 +571,13 @@ namespace OfficialPSAS.Controllers
                         }
                         else
                         {
-                            return Request.CreateResponse("group not valid");
-                        }                    
+                            return Request.CreateResponse("group is not Supervised by This Teacher");
+                        }
+                    }
+                    else
+                    {
+                        return Request.CreateResponse("Schedule's Day does'nt match with the date's day  "+day);
+                    }
                 }
                 else
                 {
@@ -593,11 +601,14 @@ namespace OfficialPSAS.Controllers
                 {
                     var Meetings = db.Meeting.Where(s => s.teacher.tid == teacher.tid && s.status == 0).Select(s=>new
                     {
+                        s.mid,
                         s.group.gid,
                         s.teacher.tid,
                         s.Date,
                         s.title,
-                        s.description
+                        s.description,
+                        s.Schedule.TimeSlots.start_time,
+                        s.Schedule.TimeSlots.end_time
                     }).Distinct().ToList();
                     if (Meetings.Count > 0)
                     {
@@ -618,6 +629,85 @@ namespace OfficialPSAS.Controllers
                 return Request.CreateResponse(cp.Message+":"+cp.InnerException);
             }
         }
+        /*-----------------------=========   Fetch the Single Meeting Details     =========-----------------------------------------*/
+        [HttpGet]
+        public HttpResponseMessage SingleMeeting(int mid)
+        {
+            try
+            {
+                var meeting = db.Meeting.Where(s => s.mid == mid&& s.status==0).FirstOrDefault();
+                if (meeting != null)
+                {
+                    string projectTitle = meeting?.group?.Project.Select(s => s.title).FirstOrDefault();
+                    var response = new
+                    {
+                        meeting.mid,
+                        schedule = new
+                        {
+                            meeting.Schedule.Sch_id,
+                            meeting.Schedule.Day,
+                            meeting.Date,
+                            meeting.Schedule.TimeSlots.start_time,
+                            meeting.Schedule.TimeSlots.end_time
+                        },
+                        meeting.title,
+                        meeting.description,
+                        teacher = new
+                        {
+                            meeting.teacher.tid,
+                            meeting.teacher.users.username
+                        },
+                        group = new
+                        {
+                            meeting.group.gid,
+                            projectTitle,
+                        }
+                    };
+                    return Request.CreateResponse(response);
+                }
+                else
+                {
+                    return Request.CreateResponse("Meeting not Founded");
+                }
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
+            }
+        }
+        /*-----------------------=========   Fetch all Meetings on a Date   =========-----------------------------------------*/
+        [HttpGet]
+        public HttpResponseMessage MeetingOnDate(DateTime Date)
+        {
+            try
+            {
+                var AllMeetings = db.Meeting.Where(s => s.Date == Date&&s.status==0).Select(s => new
+                {
+                    s.Date,
+                    s.group.gid,
+                    Project_title=s.group.Project.Select(p=>p.title).FirstOrDefault(),
+                    s.Schedule.Day,
+                    s.Schedule.TimeSlots.start_time,
+                    s.Schedule.TimeSlots.end_time,
+                    s.title,
+                    s.description,
+                    s.teacher.users.username
+                }).Distinct().ToList();
+                if (AllMeetings.Count > 0)
+                {
+                    return Request.CreateResponse(AllMeetings);
+                }
+                else 
+                    return Request.CreateResponse("Meeting Not Founded on This Date "+Date);
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message+":"+cp.InnerException);
+            }
+        }
+
+
+        /*-------------------------------------------------------------------------------------------------------------------------------------------*/
+        /*========================================== ------     Commeettiee Panel     ----------==========================================*/
         
+
     }
 }
