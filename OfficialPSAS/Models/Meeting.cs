@@ -15,11 +15,13 @@ namespace OfficialPSAS.Models
     public partial class Meeting
     {
         public int mid { get; set; }
+        public string title { get; set; }
         public Nullable<int> status { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
-        public string participantId { get; set; }
+        public string description { get; set; }
     
-        public virtual users users { get; set; }
+        public virtual group group { get; set; }
+        public virtual teacher teacher { get; set; }
         public virtual Schedule Schedule { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities31">
+  <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities33">
     <EntitySetMapping Name="AppointmentRequests">
       <EntityTypeMapping TypeName="OfficialSASModel.AppointmentRequests">
         <MappingFragment StoreEntitySet="AppointmentRequests">
@@ -46,9 +46,10 @@
       <EntityTypeMapping TypeName="OfficialSASModel.Meeting">
         <MappingFragment StoreEntitySet="Meeting">
           <ScalarProperty Name="mid" ColumnName="mid" />
+          <ScalarProperty Name="title" ColumnName="title" />
           <ScalarProperty Name="status" ColumnName="status" />
           <ScalarProperty Name="Date" ColumnName="Date" />
-          <ScalarProperty Name="participantId" ColumnName="participantId" />
+          <ScalarProperty Name="description" ColumnName="description" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -233,6 +234,15 @@
       </EndProperty>
       <Condition IsNull="false" ColumnName="gid" />
     </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__Meeting__partici__26CFC035" TypeName="OfficialSASModel.FK__Meeting__partici__26CFC035" StoreEntitySet="Meeting">
+      <EndProperty Name="group">
+        <ScalarProperty Name="gid" ColumnName="participant_Id" />
+      </EndProperty>
+      <EndProperty Name="Meeting">
+        <ScalarProperty Name="mid" ColumnName="mid" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="participant_Id" />
+    </AssociationSetMapping>
     <AssociationSetMapping Name="FK__Project__gid__09746778" TypeName="OfficialSASModel.FK__Project__gid__09746778" StoreEntitySet="Project">
       <EndProperty Name="group">
         <ScalarProperty Name="gid" ColumnName="gid" />
@@ -323,16 +333,16 @@
       </EndProperty>
       <Condition IsNull="false" ColumnName="tecId" />
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK__Meeting__created__7BE56230" TypeName="OfficialSASModel.FK__Meeting__created__7BE56230" StoreEntitySet="Meeting">
-      <EndProperty Name="users">
-        <ScalarProperty Name="uid" ColumnName="createdBy" />
+    <AssociationSetMapping Name="FK__Meeting__created__27C3E46E" TypeName="OfficialSASModel.FK__Meeting__created__27C3E46E" StoreEntitySet="Meeting">
+      <EndProperty Name="teacher">
+        <ScalarProperty Name="tid" ColumnName="createdBy" />
       </EndProperty>
       <EndProperty Name="Meeting">
         <ScalarProperty Name="mid" ColumnName="mid" />
       </EndProperty>
       <Condition IsNull="false" ColumnName="createdBy" />
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK__Meeting__Sch_id__7AF13DF7" TypeName="OfficialSASModel.FK__Meeting__Sch_id__7AF13DF7" StoreEntitySet="Meeting">
+    <AssociationSetMapping Name="FK__Meeting__Sch_id__25DB9BFC" TypeName="OfficialSASModel.FK__Meeting__Sch_id__25DB9BFC" StoreEntitySet="Meeting">
       <EndProperty Name="Schedule">
         <ScalarProperty Name="Sch_id" ColumnName="Sch_id" />
       </EndProperty>

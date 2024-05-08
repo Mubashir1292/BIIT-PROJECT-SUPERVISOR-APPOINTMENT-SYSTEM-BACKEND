@@ -21,7 +21,6 @@ namespace OfficialPSAS.Models
             this.group = new HashSet<group>();
             this.groupRequests = new HashSet<groupRequests>();
             this.groupRequests1 = new HashSet<groupRequests>();
-            this.Meeting = new HashSet<Meeting>();
             this.Project = new HashSet<Project>();
             this.Student = new HashSet<Student>();
             this.teacher = new HashSet<teacher>();
@@ -40,8 +39,6 @@ namespace OfficialPSAS.Models
         public virtual ICollection<groupRequests> groupRequests { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<groupRequests> groupRequests1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Meeting> Meeting { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Project> Project { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

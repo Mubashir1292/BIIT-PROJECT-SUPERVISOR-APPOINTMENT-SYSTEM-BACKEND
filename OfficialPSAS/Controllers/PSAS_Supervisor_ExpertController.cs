@@ -13,7 +13,7 @@ namespace OfficialPSAS.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class PSAS_Supervisor_ExpertController : ApiController
     {
-        OfficialSASEntities31 db = new OfficialSASEntities31(); 
+        OfficialSASEntities33 db = new OfficialSASEntities33(); 
                 /*-------------------====================   Get All Notifications of relative supervisor    ==========-----------------------*/
         [HttpGet]
         public HttpResponseMessage GetAllNotifications(int teacher_id)
@@ -447,7 +447,7 @@ namespace OfficialPSAS.Controllers
                 return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
             }
         }
-         /*---------------------==========  Get the Progress  ============-------------------------*/
+        /*---------------------==========  Get the Progress  ============-------------------------*/
         [HttpGet]
         public HttpResponseMessage ProgressDetails(int gid)
         {
@@ -462,17 +462,18 @@ namespace OfficialPSAS.Controllers
                         var TaskProgresses = db.TaskProgress.Where(s => s.Task.task_id == task.task_id&&s.Comments.Length>0).Distinct().ToList();
                         if (TaskProgresses.Count > 0)
                         {
-                            foreach (var progress in TaskProgresses)
-                            {
-                                var response = new
+                            var progressByStudent = TaskProgresses.GroupBy(progress => progress.GroupMember.st_id)
+                                .Select(group => new
                                 {
-                                    progress.Task.task_id,
-                                    progress.GroupMember.st_id,
-                                    progress.status,
-                                    progress.Comments
-                                };
-                                allDetails.Add(response);
-                            }
+                                    st_id = group.Key,
+                                    progress = group.Select(progress => new
+                                    {
+                                        progress.Task.task_id,
+                                        progress.status,
+                                        progress.Comments
+                                    }).ToList()
+                                });
+                            allDetails.AddRange(progressByStudent);
                         }
                         else
                         {
@@ -490,5 +491,98 @@ namespace OfficialPSAS.Controllers
                 return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
             }
         }
+        /*---------------------==========  Get the TimeSlots   ============-------------------------*/
+        [HttpGet]
+        public HttpResponseMessage FetchTimeSlots(DateTime date,int teacher_id)
+        {
+            try
+            {
+                string day = date.DayOfWeek.ToString();
+                var StartTimeList = db.Schedule.Where(s => s.Day == day && s.status == 0 && s.teacher.tid==teacher_id).Select(s => new
+                {
+                    label = s.Sch_id,
+                    value = s.TimeSlots.start_time
+                }).Distinct().ToList();
+                if (StartTimeList.Count > 0)
+                {
+                    var EndTimeList = db.Schedule.Where(s => s.Day == day && s.status == 0 && s.teacher.tid == teacher_id).Select(s => new
+                    {
+                        label = s.Sch_id,
+                        value = s.TimeSlots.end_time
+                    }).Distinct().ToList();
+                    if (EndTimeList.Count > 0)
+                    {
+                        var response = new
+                        {   day,
+                            StartTimeList,
+                            EndTimeList,
+                        };
+                        return Request.CreateResponse(response);
+                    }
+                    else
+                    {
+                        return Request.CreateResponse("End Time Not Founded");
+                    }
+                }
+                else
+                {
+                    return Request.CreateResponse("No Time-Slots for "+day);
+                }
+
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
+            }
+        }
+        /*---------------------==========  Add New Meeting  ============-------------------------*/
+        [HttpPost]
+        public HttpResponseMessage AddMeeting(int Sch_id,DateTime date,int participant_Id,string title,string description)
+        {
+            try
+            {
+                var Schedule = db.Schedule.Where(s => s.Sch_id == Sch_id && s.status==0 ).FirstOrDefault();
+                if (Schedule != null)
+                {
+                        var group = db.group.Where(s => s.gid == participant_Id).First();
+                        if (group != null)
+                        {
+                            if (title != null || description != null)
+                            {
+                                Meeting meeting = new Meeting();
+                                meeting.status = 0;
+                                meeting.Schedule = Schedule;
+                                meeting.Date = date;
+                                meeting.group = group;
+                                meeting.teacher = Schedule.teacher;
+                                meeting.title = title;
+                                meeting.description = description;
+                                db.Meeting.Add(meeting);
+                                Schedule.status = 1;
+                                int RowsEffected = db.SaveChanges();
+                                return Request.CreateResponse("Meeting Added " + RowsEffected);
+                            }
+                            else
+                            {
+                                return Request.CreateResponse("Title And Description not be empty");
+                            }
+                        }
+                        else
+                        {
+                            return Request.CreateResponse("group not founded");
+                        }                    
+                }
+                else
+                {
+                    return Request.CreateResponse("Schedule not founded");
+                }
+
+
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
+            }
+        }
+        /*---------------------==========      ============-------------------------*/
+        
     }
 }
