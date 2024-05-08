@@ -14,7 +14,7 @@ namespace OfficialPSAS.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class PSASController : ApiController
     {
-        OfficialSASEntities33 db = new OfficialSASEntities33();
+        OfficialSASEntities34 db = new OfficialSASEntities34();
         /*public string  CheckForTechnicalExpert(string tid)
         {
             var teacherAndTechnicalExpertSame = from t in db.teacher
@@ -1419,7 +1419,7 @@ namespace OfficialPSAS.Controllers
                     {
                         ar.users = teacherFinding;
                         ar.RequestedBy = findingStudent.st_id;
-                        ar.Schedule = ScheduleFinding;
+                        //ar.Schedule = ScheduleFinding;
                         ar.status = 0;
                         ar.message = message;
                         db.AppointmentRequests.Add(ar);

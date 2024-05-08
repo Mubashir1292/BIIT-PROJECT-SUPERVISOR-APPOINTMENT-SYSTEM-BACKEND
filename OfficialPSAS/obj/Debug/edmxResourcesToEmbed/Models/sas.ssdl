@@ -97,9 +97,9 @@
     </Key>
     <Property Name="Sch_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Day" Type="varchar" MaxLength="50" />
-    <Property Name="status" Type="int" Nullable="false" />
+    <Property Name="status" Type="int" />
+    <Property Name="slotId" Type="int" />
     <Property Name="tid" Type="int" />
-    <Property Name="slotid" Type="int" />
   </EntityType>
   <EntityType Name="Student">
     <Key>
@@ -214,18 +214,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__Appointme__Sch_i__7D439ABD">
-    <End Role="Schedule" Type="Self.Schedule" Multiplicity="0..1" />
-    <End Role="AppointmentRequests" Type="Self.AppointmentRequests" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Schedule">
-        <PropertyRef Name="Sch_id" />
-      </Principal>
-      <Dependent Role="AppointmentRequests">
-        <PropertyRef Name="Sch_id" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK__group__Created_b__5FB337D6">
     <End Role="users" Type="Self.users" Multiplicity="0..1" />
     <End Role="group" Type="Self.group" Multiplicity="*" />
@@ -286,7 +274,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__Meeting__created__27C3E46E">
+  <Association Name="FK__Meeting__created__30592A6F">
     <End Role="teacher" Type="Self.teacher" Multiplicity="0..1" />
     <End Role="Meeting" Type="Self.Meeting" Multiplicity="*" />
     <ReferentialConstraint>
@@ -298,7 +286,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__Meeting__partici__26CFC035">
+  <Association Name="FK__Meeting__partici__2F650636">
     <End Role="group" Type="Self.group" Multiplicity="0..1" />
     <End Role="Meeting" Type="Self.Meeting" Multiplicity="*" />
     <ReferentialConstraint>
@@ -310,7 +298,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__Meeting__Sch_id__25DB9BFC">
+  <Association Name="FK__Meeting__Sch_id__2E70E1FD">
     <End Role="Schedule" Type="Self.Schedule" Multiplicity="0..1" />
     <End Role="Meeting" Type="Self.Meeting" Multiplicity="*" />
     <ReferentialConstraint>
@@ -442,7 +430,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__Schedule__slotid__6BAEFA67">
+  <Association Name="FK__Schedule__slotId__29AC2CE0">
     <End Role="TimeSlots" Type="Self.TimeSlots" Multiplicity="0..1" />
     <End Role="Schedule" Type="Self.Schedule" Multiplicity="*" />
     <ReferentialConstraint>
@@ -450,11 +438,11 @@
         <PropertyRef Name="id" />
       </Principal>
       <Dependent Role="Schedule">
-        <PropertyRef Name="slotid" />
+        <PropertyRef Name="slotId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__Schedule__tid__6ABAD62E">
+  <Association Name="FK__Schedule__tid__2AA05119">
     <End Role="teacher" Type="Self.teacher" Multiplicity="0..1" />
     <End Role="Schedule" Type="Self.Schedule" Multiplicity="*" />
     <ReferentialConstraint>
@@ -659,10 +647,6 @@
       <End Role="users" EntitySet="users" />
       <End Role="AppointmentRequests" EntitySet="AppointmentRequests" />
     </AssociationSet>
-    <AssociationSet Name="FK__Appointme__Sch_i__7D439ABD" Association="Self.FK__Appointme__Sch_i__7D439ABD">
-      <End Role="Schedule" EntitySet="Schedule" />
-      <End Role="AppointmentRequests" EntitySet="AppointmentRequests" />
-    </AssociationSet>
     <AssociationSet Name="FK__group__Created_b__5FB337D6" Association="Self.FK__group__Created_b__5FB337D6">
       <End Role="users" EntitySet="users" />
       <End Role="group" EntitySet="group" />
@@ -683,15 +667,15 @@
       <End Role="group" EntitySet="group" />
       <End Role="groupRequests" EntitySet="groupRequests" />
     </AssociationSet>
-    <AssociationSet Name="FK__Meeting__created__27C3E46E" Association="Self.FK__Meeting__created__27C3E46E">
+    <AssociationSet Name="FK__Meeting__created__30592A6F" Association="Self.FK__Meeting__created__30592A6F">
       <End Role="teacher" EntitySet="teacher" />
       <End Role="Meeting" EntitySet="Meeting" />
     </AssociationSet>
-    <AssociationSet Name="FK__Meeting__partici__26CFC035" Association="Self.FK__Meeting__partici__26CFC035">
+    <AssociationSet Name="FK__Meeting__partici__2F650636" Association="Self.FK__Meeting__partici__2F650636">
       <End Role="group" EntitySet="group" />
       <End Role="Meeting" EntitySet="Meeting" />
     </AssociationSet>
-    <AssociationSet Name="FK__Meeting__Sch_id__25DB9BFC" Association="Self.FK__Meeting__Sch_id__25DB9BFC">
+    <AssociationSet Name="FK__Meeting__Sch_id__2E70E1FD" Association="Self.FK__Meeting__Sch_id__2E70E1FD">
       <End Role="Schedule" EntitySet="Schedule" />
       <End Role="Meeting" EntitySet="Meeting" />
     </AssociationSet>
@@ -735,11 +719,11 @@
       <End Role="teacher" EntitySet="teacher" />
       <End Role="projectRequests" EntitySet="projectRequests" />
     </AssociationSet>
-    <AssociationSet Name="FK__Schedule__slotid__6BAEFA67" Association="Self.FK__Schedule__slotid__6BAEFA67">
+    <AssociationSet Name="FK__Schedule__slotId__29AC2CE0" Association="Self.FK__Schedule__slotId__29AC2CE0">
       <End Role="TimeSlots" EntitySet="TimeSlots" />
       <End Role="Schedule" EntitySet="Schedule" />
     </AssociationSet>
-    <AssociationSet Name="FK__Schedule__tid__6ABAD62E" Association="Self.FK__Schedule__tid__6ABAD62E">
+    <AssociationSet Name="FK__Schedule__tid__2AA05119" Association="Self.FK__Schedule__tid__2AA05119">
       <End Role="teacher" EntitySet="teacher" />
       <End Role="Schedule" EntitySet="Schedule" />
     </AssociationSet>

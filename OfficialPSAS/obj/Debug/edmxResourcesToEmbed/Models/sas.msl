@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities33">
+  <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities34">
     <EntitySetMapping Name="AppointmentRequests">
       <EntityTypeMapping TypeName="OfficialSASModel.AppointmentRequests">
         <MappingFragment StoreEntitySet="AppointmentRequests">
           <ScalarProperty Name="aid" ColumnName="aid" />
           <ScalarProperty Name="RequestedBy" ColumnName="RequestedBy" />
+          <ScalarProperty Name="Sch_id" ColumnName="Sch_id" />
           <ScalarProperty Name="status" ColumnName="status" />
           <ScalarProperty Name="message" ColumnName="message" />
         </MappingFragment>
@@ -198,15 +199,6 @@
       </EndProperty>
       <Condition IsNull="false" ColumnName="RequestedTo" />
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK__Appointme__Sch_i__7D439ABD" TypeName="OfficialSASModel.FK__Appointme__Sch_i__7D439ABD" StoreEntitySet="AppointmentRequests">
-      <EndProperty Name="Schedule">
-        <ScalarProperty Name="Sch_id" ColumnName="Sch_id" />
-      </EndProperty>
-      <EndProperty Name="AppointmentRequests">
-        <ScalarProperty Name="aid" ColumnName="aid" />
-      </EndProperty>
-      <Condition IsNull="false" ColumnName="Sch_id" />
-    </AssociationSetMapping>
     <AssociationSetMapping Name="FK__group__Created_b__5FB337D6" TypeName="OfficialSASModel.FK__group__Created_b__5FB337D6" StoreEntitySet="group">
       <EndProperty Name="users">
         <ScalarProperty Name="uid" ColumnName="Created_by" />
@@ -234,7 +226,7 @@
       </EndProperty>
       <Condition IsNull="false" ColumnName="gid" />
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK__Meeting__partici__26CFC035" TypeName="OfficialSASModel.FK__Meeting__partici__26CFC035" StoreEntitySet="Meeting">
+    <AssociationSetMapping Name="FK__Meeting__partici__2F650636" TypeName="OfficialSASModel.FK__Meeting__partici__2F650636" StoreEntitySet="Meeting">
       <EndProperty Name="group">
         <ScalarProperty Name="gid" ColumnName="participant_Id" />
       </EndProperty>
@@ -333,7 +325,7 @@
       </EndProperty>
       <Condition IsNull="false" ColumnName="tecId" />
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK__Meeting__created__27C3E46E" TypeName="OfficialSASModel.FK__Meeting__created__27C3E46E" StoreEntitySet="Meeting">
+    <AssociationSetMapping Name="FK__Meeting__created__30592A6F" TypeName="OfficialSASModel.FK__Meeting__created__30592A6F" StoreEntitySet="Meeting">
       <EndProperty Name="teacher">
         <ScalarProperty Name="tid" ColumnName="createdBy" />
       </EndProperty>
@@ -342,7 +334,7 @@
       </EndProperty>
       <Condition IsNull="false" ColumnName="createdBy" />
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK__Meeting__Sch_id__25DB9BFC" TypeName="OfficialSASModel.FK__Meeting__Sch_id__25DB9BFC" StoreEntitySet="Meeting">
+    <AssociationSetMapping Name="FK__Meeting__Sch_id__2E70E1FD" TypeName="OfficialSASModel.FK__Meeting__Sch_id__2E70E1FD" StoreEntitySet="Meeting">
       <EndProperty Name="Schedule">
         <ScalarProperty Name="Sch_id" ColumnName="Sch_id" />
       </EndProperty>
@@ -396,16 +388,16 @@
       </EndProperty>
       <Condition IsNull="false" ColumnName="tid" />
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK__Schedule__slotid__6BAEFA67" TypeName="OfficialSASModel.FK__Schedule__slotid__6BAEFA67" StoreEntitySet="Schedule">
+    <AssociationSetMapping Name="FK__Schedule__slotId__29AC2CE0" TypeName="OfficialSASModel.FK__Schedule__slotId__29AC2CE0" StoreEntitySet="Schedule">
       <EndProperty Name="TimeSlots">
-        <ScalarProperty Name="id" ColumnName="slotid" />
+        <ScalarProperty Name="id" ColumnName="slotId" />
       </EndProperty>
       <EndProperty Name="Schedule">
         <ScalarProperty Name="Sch_id" ColumnName="Sch_id" />
       </EndProperty>
-      <Condition IsNull="false" ColumnName="slotid" />
+      <Condition IsNull="false" ColumnName="slotId" />
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK__Schedule__tid__6ABAD62E" TypeName="OfficialSASModel.FK__Schedule__tid__6ABAD62E" StoreEntitySet="Schedule">
+    <AssociationSetMapping Name="FK__Schedule__tid__2AA05119" TypeName="OfficialSASModel.FK__Schedule__tid__2AA05119" StoreEntitySet="Schedule">
       <EndProperty Name="teacher">
         <ScalarProperty Name="tid" ColumnName="tid" />
       </EndProperty>

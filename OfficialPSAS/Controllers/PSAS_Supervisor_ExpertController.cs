@@ -13,7 +13,7 @@ namespace OfficialPSAS.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class PSAS_Supervisor_ExpertController : ApiController
     {
-        OfficialSASEntities33 db = new OfficialSASEntities33(); 
+        OfficialSASEntities34 db = new OfficialSASEntities34(); 
                 /*-------------------====================   Get All Notifications of relative supervisor    ==========-----------------------*/
         [HttpGet]
         public HttpResponseMessage GetAllNotifications(int teacher_id)
@@ -543,7 +543,7 @@ namespace OfficialPSAS.Controllers
                 var Schedule = db.Schedule.Where(s => s.Sch_id == Sch_id && s.status==0 ).FirstOrDefault();
                 if (Schedule != null)
                 {
-                        var group = db.group.Where(s => s.gid == participant_Id).First();
+                        var group = db.group.Where(s => s.gid == participant_Id && s.tid==Schedule.teacher.tid).FirstOrDefault();
                         if (group != null)
                         {
                             if (title != null || description != null)
@@ -568,12 +568,12 @@ namespace OfficialPSAS.Controllers
                         }
                         else
                         {
-                            return Request.CreateResponse("group not founded");
+                            return Request.CreateResponse("group not valid");
                         }                    
                 }
                 else
                 {
-                    return Request.CreateResponse("Schedule not founded");
+                    return Request.CreateResponse("Schedule not valid");
                 }
 
 
@@ -582,7 +582,42 @@ namespace OfficialPSAS.Controllers
                 return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
             }
         }
-        /*---------------------==========      ============-------------------------*/
+        /*---------------------==========   Fetch All Meetings   ============-------------------------*/
+        [HttpGet]
+        public HttpResponseMessage AllMeetings(int tid)
+        {
+            try
+            {
+                var teacher = db.teacher.Where(s => s.tid == tid).FirstOrDefault();
+                if (teacher != null)
+                {
+                    var Meetings = db.Meeting.Where(s => s.teacher.tid == teacher.tid && s.status == 0).Select(s=>new
+                    {
+                        s.group.gid,
+                        s.teacher.tid,
+                        s.Date,
+                        s.title,
+                        s.description
+                    }).Distinct().ToList();
+                    if (Meetings.Count > 0)
+                    {
+                        return Request.CreateResponse(Meetings);
+                    }
+                    else
+                    {
+                        return Request.CreateResponse("No Meetings Founded");
+                    }             
+                }
+                else
+                {
+                    return Request.CreateResponse("teacher not founded");
+                }
+
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message+":"+cp.InnerException);
+            }
+        }
         
     }
 }
