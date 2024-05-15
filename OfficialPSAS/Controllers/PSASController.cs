@@ -1382,7 +1382,7 @@ namespace OfficialPSAS.Controllers
             try
             {
                 var findingTechnicalExpert = db.TechnicalExpertTechnology.Where(s => s.TechnologyExpert.teacher.tid == teacher_id).Select(s => s.TechnologyExpert.teacher.tid).FirstOrDefault();
-                if (findingTechnicalExpert != null)
+                if (findingTechnicalExpert != 0)
                 {
                     var findingTheDaysAndTimeSlots = db.Schedule.Where(s => s.teacher.tid == teacher_id && s.Day == day && s.status == 0).Select(s => new
                     {
