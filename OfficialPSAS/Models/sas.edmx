@@ -15,6 +15,7 @@
           <Property Name="status" Type="int" />
           <Property Name="message" Type="varchar(max)" />
           <Property Name="Sch_id" Type="int" />
+          <Property Name="date" Type="date" />
         </EntityType>
         <EntityType Name="group">
           <Key>
@@ -63,6 +64,7 @@
           <Property Name="description" Type="varchar(max)" />
           <Property Name="participant_Id" Type="int" />
           <Property Name="createdBy" Type="int" />
+          <Property Name="isRecurring" Type="int" />
         </EntityType>
         <EntityType Name="Project">
           <Key>
@@ -146,6 +148,7 @@
           <Property Name="DueDate" Type="date" />
           <Property Name="gid" Type="int" />
           <Property Name="filePath" Type="varchar(max)" />
+          <Property Name="status" Type="int" />
         </EntityType>
         <EntityType Name="TaskProgress">
           <Key>
@@ -833,6 +836,7 @@
           <Property Name="aid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="status" Type="Int32" />
           <Property Name="message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="date" Type="DateTime" Precision="0" />
           <NavigationProperty Name="teacher" Relationship="Self.FK__Appointme__Reque__39E294A9" FromRole="AppointmentRequests" ToRole="teacher" />
           <NavigationProperty Name="Student" Relationship="Self.FK__Appointme__Reque__3AD6B8E2" FromRole="AppointmentRequests" ToRole="Student" />
           <NavigationProperty Name="Schedule" Relationship="Self.FK__Appointme__Sch_i__3BCADD1B" FromRole="AppointmentRequests" ToRole="Schedule" />
@@ -891,6 +895,7 @@
           <Property Name="status" Type="Int32" />
           <Property Name="Date" Type="DateTime" Precision="3" />
           <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="isRecurring" Type="Int32" />
           <NavigationProperty Name="group" Relationship="Self.FK__Meeting__partici__2F650636" FromRole="Meeting" ToRole="group" />
           <NavigationProperty Name="teacher" Relationship="Self.FK__Meeting__created__30592A6F" FromRole="Meeting" ToRole="teacher" />
           <NavigationProperty Name="Schedule" Relationship="Self.FK__Meeting__Sch_id__2E70E1FD" FromRole="Meeting" ToRole="Schedule" />
@@ -983,6 +988,7 @@
           <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="DueDate" Type="DateTime" Precision="0" />
           <Property Name="filePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="status" Type="Int32" />
           <NavigationProperty Name="group" Relationship="Self.FK__Task__gid__7EC1CEDB" FromRole="Task" ToRole="group" />
           <NavigationProperty Name="TaskProgress" Relationship="Self.FK__TaskProgr__task___019E3B86" FromRole="Task" ToRole="TaskProgress" />
         </EntityType>
@@ -1231,7 +1237,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="OfficialSASEntities36" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="OfficialSASEntities39" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="AppointmentRequests" EntityType="Self.AppointmentRequests" />
           <EntitySet Name="group" EntityType="Self.group" />
           <EntitySet Name="GroupMember" EntityType="Self.GroupMember" />
@@ -1406,13 +1412,14 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities36">
+        <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities39">
           <EntitySetMapping Name="AppointmentRequests">
             <EntityTypeMapping TypeName="OfficialSASModel.AppointmentRequests">
               <MappingFragment StoreEntitySet="AppointmentRequests">
                 <ScalarProperty Name="aid" ColumnName="aid" />
                 <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="message" ColumnName="message" />
+                <ScalarProperty Name="date" ColumnName="date" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1455,6 +1462,7 @@
                 <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="isRecurring" ColumnName="isRecurring" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1533,6 +1541,7 @@
                 <ScalarProperty Name="description" ColumnName="description" />
                 <ScalarProperty Name="DueDate" ColumnName="DueDate" />
                 <ScalarProperty Name="filePath" ColumnName="filePath" />
+                <ScalarProperty Name="status" ColumnName="status" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

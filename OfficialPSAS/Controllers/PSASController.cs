@@ -14,7 +14,7 @@ namespace OfficialPSAS.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class PSASController : ApiController
     {
-        OfficialSASEntities36 db = new OfficialSASEntities36();
+        OfficialSASEntities39 db = new OfficialSASEntities39();
         /*public string  CheckForTechnicalExpert(string tid)
         {
             var teacherAndTechnicalExpertSame = from t in db.teacher
@@ -165,19 +165,177 @@ namespace OfficialPSAS.Controllers
                                     message.status,
                                     message.Technology.name
                                 }).Take(1000).ToList();
-
-
-
-
                 return Request.CreateResponse(messages);
             }catch(Exception cp)
             {
                 return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
             }
         }
+        /*------------------------------Getting All Notifications of Student-----------------*/
+        [HttpGet]
+        public HttpResponseMessage getAllNotificationsForStudent(string regNo)
+        {
+            try
+            {
+                Dictionary<string, object> AllNotifications = new Dictionary<string, object>();
+                // -------------   fetching all the group requests which is the receiver
+                var student = db.Student.Where(s => s.st_id == regNo).FirstOrDefault();
+                if (student != null)
+                {
+                    var findingGroup = db.GroupMember.Where(s => s.st_id == regNo).FirstOrDefault();
+                    if (findingGroup != null)
+                    {
+                        // receiver side
+                        var groupRequests = db.groupRequests.Where(s => s.users1.uid.Equals(regNo)).Select(s => new
+                        {
+                            //s.group.gid,
+                            s.message_body,
+                            s.message_id,
+                            s.Technology.name,
+                            sender=new 
+                            {
+                                s.users1.uid,
+                                s.users1.username,
+                            },
+                            s.datetime
+                        }).Distinct().ToList();
+                        AllNotifications["ReceivedgroupsRequests"] = groupRequests;
+                        // sent group Requests approved and group members added
+                        // users1 = sender 
+                        // user = receiver
+                        var groupRequestApproved = db.groupRequests.Where(s => s.users.uid == regNo && s.status==1).Select(s=>new {
+                            //s.group.gid,
+                            s.message_body,
+                            s.message_id,
+                            s.Technology.name,
+                            receiver = new
+                            {
+                                s.users.uid,
+                                s.users.username,
+                            },
+                            s.datetime
+                        }) .Distinct().ToList();
+                        AllNotifications["sentGroupRequestApproved"] = groupRequestApproved;
+                        // fetching the group Joining Request Approval by the commettiee, like if sir Approves the request then show a message...
+                        var joinGroupRequestsToCommettiee = db.groupRequests.Where(s => s.users1.uid == student.st_id  && s.users.uid=="8").Select(s=>new {
+                            s.group.gid,
+                            s.message_body,
+                            s.message_id,
+                            s.Technology.name,
+                            s.users.uid,
+                            s.users.username,
+                            s.datetime
+                        }).Distinct().ToList();
+                        AllNotifications["JoiningGroupRequestsToCommettiee"] = joinGroupRequestsToCommettiee;
+                        // fetching all project approved status
+                        var projectRequests = db.projectRequests.Where(s => s.group.gid == findingGroup.group.gid && s.status == 2).Select(s=>new { 
+                            s.req_id,
+                            s.req_date,
+                            s.group.gid,
+                            s.group.users.uid,
+                            s.group.users.username,
+                           teacher =new
+                           {
+                               s.teacher.tid,
+                               s.teacher.users.username,
+                           },
+                            s.Project.pid,
+                            s.Project.title,
+                        }).Distinct().ToList();
+                        AllNotifications["projectApproved"] = projectRequests;
+                        // fetching all task details of newly assigned and the newTaskProgress
+                        var newlyAssignedTasks = (from task in db.Task
+                                                  join taskProgress in db.TaskProgress
+                                                   on task.@group.gid equals findingGroup.@group.gid
+                                                  where task.task_id != taskProgress.Task.task_id
+                                                  select new
+                                                  {
+                                                      TaskDetails = new
+                                                      {
+                                                          task.task_id,
+                                                          task.Title,
+                                                          task.description,
+                                                          task.DueDate,
+                                                          task.filePath,                                                          
+                                                      }
+                                                  }).Distinct().ToList();
+                        AllNotifications["NewlyAssignedTasks"] = newlyAssignedTasks;
+                        // updated progress notification
+                        var UpdateProgress = db.Task.Where(s => s.group.gid == findingGroup.group.gid && s.status == 1).Select(s => new
+                        {
+                            s.task_id,
+                            s.Title,
+                            s.description,
+                            s.DueDate,
+                            s.filePath,
+                            teacher=s.group.teacher.Select(p=>new
+                            {
+                                p.tid,
+                                p.users.username                                
+                            }),
+                        }).ToList();
+                        AllNotifications["UpdatedProgress"] = UpdateProgress;
+                        // fetching all newly assigned meetings
+                        DateTime dateTime = new DateTime();
+                        var NewlySupervisorMeetingAssigned = db.Meeting.Where(s => s.group.gid == findingGroup.group.gid && s.status == 0 && s.Date == dateTime.Date).Select(s=>new { 
+                            s.title,
+                            s.description,
+                            weeklyMeeting = new
+                            {
+                                s.isRecurring
+                            },
+                            s.mid,
+                            s.teacher.tid,
+                            s.teacher.users.username,
+                            dateTime = new
+                            {
+                                s.Schedule.Day,
+                                s.Date,
+                                s.Schedule.TimeSlots.id,
+                                s.Schedule.TimeSlots.start_time,
+                                s.Schedule.TimeSlots.end_time
+                            },
+
+                        }).ToList();
+                        AllNotifications["NewlySupervisorMeetingAssigned"] = NewlySupervisorMeetingAssigned;
+                        // Appointment Requests
+                        DateTime currentDate = DateTime.Now;
+                        var AppointmentRequests = db.AppointmentRequests.Where(s => s.Student.st_id == regNo && s.status == 1 && s.date>currentDate).Select(s => new
+                        {
+                            s.aid,
+                            teacher = new
+                            {
+                                s.teacher.tid,
+                                s.teacher.users.username,                                
+                            },
+                            DateTime = new
+                            {
+                                s.Schedule.Day,
+                                s.date,
+                                s.Schedule.TimeSlots.start_time,
+                                s.Schedule.TimeSlots.end_time,
+                            }
+                        }).ToList();
+                        AllNotifications["HelpAppointments"] = AppointmentRequests;
+                        return Request.CreateResponse(AllNotifications);
+                    }
+                    else
+                    {
+                        return Request.CreateResponse(HttpStatusCode.NotFound, "Group Not Founded");
+                    }
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Student Not Founded");
+                }
+                
 
 
-
+            }catch(Exception cp)
+            {
+                return Request.CreateResponse(cp.Message + ":" + cp.InnerException);
+            }
+        }
         /*-------------------------X-----------Dashboard Api`s--------------X------------------*/
 
 
@@ -598,7 +756,7 @@ namespace OfficialPSAS.Controllers
                                 msg.users = receiverUser;
                                 msg.datetime = currentDateTime;
                                 msg.status = 0;
-                                msg.message_body = Message;
+                                msg.message_body = Message;                                
                                 db.groupRequests.Add(msg);
                             }
                             else if (AlreadyfindingRequestStatus == 0)
@@ -637,6 +795,7 @@ namespace OfficialPSAS.Controllers
         {
             try
             {
+                Dictionary<string, object> allRequests = new Dictionary<string, object>();
                 var findingGroup = db.GroupMember.Where(s => s.st_id == regNo).FirstOrDefault();
                 if (findingGroup != null)
                 {
@@ -665,7 +824,8 @@ namespace OfficialPSAS.Controllers
 
                     if (gettingAllRequests.Count > 0)
                     {
-                        return Request.CreateResponse(gettingAllRequests + ":" + findingGroup.group.gid);
+                        allRequests["gettingAllRequests"] = gettingAllRequests;
+                        return Request.CreateResponse(allRequests);
                     }
                     else
                     {

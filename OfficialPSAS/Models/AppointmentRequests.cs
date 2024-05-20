@@ -17,6 +17,7 @@ namespace OfficialPSAS.Models
         public int aid { get; set; }
         public Nullable<int> status { get; set; }
         public string message { get; set; }
+        public Nullable<System.DateTime> date { get; set; }
     
         public virtual teacher teacher { get; set; }
         public virtual Student Student { get; set; }

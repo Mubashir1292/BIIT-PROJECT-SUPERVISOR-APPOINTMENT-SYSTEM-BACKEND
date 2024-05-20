@@ -19,6 +19,7 @@ namespace OfficialPSAS.Models
         public Nullable<int> status { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
         public string description { get; set; }
+        public Nullable<int> isRecurring { get; set; }
     
         public virtual group group { get; set; }
         public virtual teacher teacher { get; set; }

@@ -10,6 +10,7 @@
     <Property Name="status" Type="int" />
     <Property Name="message" Type="varchar(max)" />
     <Property Name="Sch_id" Type="int" />
+    <Property Name="date" Type="date" />
   </EntityType>
   <EntityType Name="group">
     <Key>
@@ -58,6 +59,7 @@
     <Property Name="description" Type="varchar(max)" />
     <Property Name="participant_Id" Type="int" />
     <Property Name="createdBy" Type="int" />
+    <Property Name="isRecurring" Type="int" />
   </EntityType>
   <EntityType Name="Project">
     <Key>
@@ -141,6 +143,7 @@
     <Property Name="DueDate" Type="date" />
     <Property Name="gid" Type="int" />
     <Property Name="filePath" Type="varchar(max)" />
+    <Property Name="status" Type="int" />
   </EntityType>
   <EntityType Name="TaskProgress">
     <Key>

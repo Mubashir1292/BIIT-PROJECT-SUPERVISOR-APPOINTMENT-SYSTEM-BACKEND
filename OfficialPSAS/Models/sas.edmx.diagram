@@ -4,27 +4,27 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="41b6ab17df694a858e535dac1c7179cc" Name="Diagram1">
-        <EntityTypeShape EntityType="OfficialSASModel.AppointmentRequests" Width="1.5" PointX="10.5" PointY="20.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.group" Width="1.5" PointX="3" PointY="13.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.GroupMember" Width="1.5" PointX="5.25" PointY="16.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.groupRequests" Width="1.5" PointX="5.25" PointY="12.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.Meeting" Width="1.5" PointX="8.25" PointY="14.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.Project" Width="1.5" PointX="8.25" PointY="17.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.projectDomain" Width="1.5" PointX="6" PointY="10.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.projectRequests" Width="1.5" PointX="10.5" PointY="17.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.Schedule" Width="1.5" PointX="10.5" PointY="23.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.Student" Width="1.5" PointX="3" PointY="18.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.SupervisorGroupConnection" Width="1.5" PointX="8.25" PointY="11.75" IsExpanded="true" />
+      <Diagram DiagramId="9f9c834fe188473382078d8e2e1ca646" Name="Diagram1">
+        <EntityTypeShape EntityType="OfficialSASModel.AppointmentRequests" Width="1.5" PointX="10.5" PointY="20.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.group" Width="1.5" PointX="3" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.GroupMember" Width="1.5" PointX="5.25" PointY="16.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.groupRequests" Width="1.5" PointX="5.25" PointY="13.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.Meeting" Width="1.5" PointX="8.25" PointY="14.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.Project" Width="1.5" PointX="8.25" PointY="18" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.projectDomain" Width="1.5" PointX="6" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.projectRequests" Width="1.5" PointX="10.5" PointY="17.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.Schedule" Width="1.5" PointX="10.5" PointY="24.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.Student" Width="1.5" PointX="3" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.SupervisorGroupConnection" Width="1.5" PointX="8.25" PointY="12.125" IsExpanded="true" />
         <EntityTypeShape EntityType="OfficialSASModel.sysdiagrams" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.Task" Width="1.5" PointX="5.25" PointY="29.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.TaskProgress" Width="1.5" PointX="7.5" PointY="23.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.teacher" Width="1.5" PointX="5.25" PointY="19.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.TechnicalExpertTechnology" Width="1.5" PointX="12.75" PointY="14.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.Technology" Width="1.5" PointX="3" PointY="22.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.TechnologyExpert" Width="1.5" PointX="10.5" PointY="14.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.TimeSlots" Width="1.5" PointX="8.25" PointY="26.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="OfficialSASModel.users" Width="1.5" PointX="0.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.Task" Width="1.5" PointX="5.25" PointY="30.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.TaskProgress" Width="1.5" PointX="7.5" PointY="23.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.teacher" Width="1.5" PointX="5.25" PointY="19.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.TechnicalExpertTechnology" Width="1.5" PointX="12.75" PointY="14.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.Technology" Width="1.5" PointX="3" PointY="23.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.TechnologyExpert" Width="1.5" PointX="10.5" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.TimeSlots" Width="1.5" PointX="8.25" PointY="26.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="OfficialSASModel.users" Width="1.5" PointX="0.75" PointY="16.125" IsExpanded="true" />
         <AssociationConnector Association="OfficialSASModel.FK__Appointme__Reque__39E294A9" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK__Appointme__Reque__3AD6B8E2" ManuallyRouted="false" />
         <AssociationConnector Association="OfficialSASModel.FK__Appointme__Sch_i__3BCADD1B" ManuallyRouted="false" />
