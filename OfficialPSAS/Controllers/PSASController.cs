@@ -66,7 +66,7 @@ namespace OfficialPSAS.Controllers
                                 findingTechnology.group.gid,
                                 findingTechnology.Student.users.username,
                                 findingUser.role,
-
+                                findingStudent.image,
                             };
                         return Request.CreateResponse(response);
                         }
@@ -93,7 +93,7 @@ namespace OfficialPSAS.Controllers
                             // set this material also..
                             var isTechnicalExpertFounded = db.TechnologyExpert.Where(s => s.teacher.tid == isTeacherFounded.tid).FirstOrDefault();
                             if (isTeacherFounded != null)
-                            {
+                            {                                
                                 return Request.CreateResponse(findingUser);
                             }
                             else
@@ -103,7 +103,7 @@ namespace OfficialPSAS.Controllers
                         }
                         else
                         {
-                            return Request.CreateResponse(findingUser);
+                            return Request.CreateResponse("Teacher Not founded");
                         }                       
                     }
                     else
@@ -178,6 +178,7 @@ namespace OfficialPSAS.Controllers
             try
             {
                 Dictionary<string, object> AllNotifications = new Dictionary<string, object>();
+                List<TaskProgressRequest> ProgressList = new List<TaskProgressRequest>(); 
                 // -------------   fetching all the group requests which is the receiver
                 var student = db.Student.Where(s => s.st_id == regNo).FirstOrDefault();
                 if (student != null)
@@ -261,19 +262,19 @@ namespace OfficialPSAS.Controllers
                                                   }).Distinct().ToList();
                         AllNotifications["NewlyAssignedTasks"] = newlyAssignedTasks;
                         // updated progress notification
-                        var UpdateProgress = db.Task.Where(s => s.group.gid == findingGroup.group.gid && s.status == 1).Select(s => new
+                        DateTime Datecurrent = DateTime.Now;
+                        var UpdateProgress = db.TaskProgress.Where(s => s.Task.DueDate > Datecurrent && s.Task.group.gid == findingGroup.group.gid && s.Task.status==1).Select(s => new
                         {
-                            s.task_id,
-                            s.Title,
-                            s.description,
-                            s.DueDate,
-                            s.filePath,
-                            teacher=s.group.teacher.Select(p=>new
-                            {
-                                p.tid,
-                                p.users.username                                
-                            }),
+                            s.Task.task_id,
+                            s.Task.Title,
+                            MembersProgress = new
+                            {                                                                
+                                s.GroupMember.st_id,
+                                s.status,
+                                s.Comments,
+                            }
                         }).ToList();
+
                         AllNotifications["UpdatedProgress"] = UpdateProgress;
                         // fetching all newly assigned meetings
                         DateTime dateTime = new DateTime();
