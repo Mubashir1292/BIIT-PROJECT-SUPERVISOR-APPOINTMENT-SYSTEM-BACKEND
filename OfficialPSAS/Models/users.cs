@@ -23,6 +23,7 @@ namespace OfficialPSAS.Models
             this.Project = new HashSet<Project>();
             this.Student = new HashSet<Student>();
             this.teacher = new HashSet<teacher>();
+            this.TechnologyExpert = new HashSet<TechnologyExpert>();
         }
     
         public string uid { get; set; }
@@ -42,6 +43,8 @@ namespace OfficialPSAS.Models
         public virtual ICollection<Student> Student { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<teacher> teacher { get; set; }
-        public virtual TechnologyExpert TechnologyExpert { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TechnologyExpert> TechnologyExpert { get; set; }
+        public virtual TechnologyExpert TechnologyExpert1 { get; set; }
     }
 }

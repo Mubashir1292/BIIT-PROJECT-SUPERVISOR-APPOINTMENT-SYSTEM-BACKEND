@@ -166,10 +166,7 @@
           </Key>
           <Property Name="tid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="uid" Type="varchar" MaxLength="100" />
-          <Property Name="gid" Type="int" />
-          <Property Name="tecId" Type="int" />
-          <Property Name="Sch_id" Type="int" />
-          <Property Name="Ap_Id" Type="int" />
+          <Property Name="image" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="TechnicalExpertTechnology">
           <Key>
@@ -192,6 +189,8 @@
           </Key>
           <Property Name="id" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="tid" Type="int" />
+          <Property Name="image" Type="varchar" MaxLength="100" />
+          <Property Name="uid" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="TimeSlots">
           <Key>
@@ -558,18 +557,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__teacher__gid__6383C8BA">
-          <End Role="group" Type="Self.group" Multiplicity="0..1" />
-          <End Role="teacher" Type="Self.teacher" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="group">
-              <PropertyRef Name="gid" />
-            </Principal>
-            <Dependent Role="teacher">
-              <PropertyRef Name="gid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__teacher__uid__628FA481">
           <End Role="users" Type="Self.users" Multiplicity="0..1" />
           <End Role="teacher" Type="Self.teacher" Multiplicity="*" />
@@ -618,6 +605,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__TechnologyE__uid__45544755">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="TechnologyExpert" Type="Self.TechnologyExpert" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="uid" />
+            </Principal>
+            <Dependent Role="TechnologyExpert">
+              <PropertyRef Name="uid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__TechnologyEx__id__57A801BA">
           <End Role="users" Type="Self.users" Multiplicity="1" />
           <End Role="TechnologyExpert" Type="Self.TechnologyExpert" Multiplicity="0..1" />
@@ -627,30 +626,6 @@
             </Principal>
             <Dependent Role="TechnologyExpert">
               <PropertyRef Name="id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_teacher_Schedule">
-          <End Role="Schedule" Type="Self.Schedule" Multiplicity="0..1" />
-          <End Role="teacher" Type="Self.teacher" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Schedule">
-              <PropertyRef Name="Sch_id" />
-            </Principal>
-            <Dependent Role="teacher">
-              <PropertyRef Name="Sch_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_teacher_Technology">
-          <End Role="Technology" Type="Self.Technology" Multiplicity="0..1" />
-          <End Role="teacher" Type="Self.teacher" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Technology">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="teacher">
-              <PropertyRef Name="tecId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -791,10 +766,6 @@
             <End Role="Task" EntitySet="Task" />
             <End Role="TaskProgress" EntitySet="TaskProgress" />
           </AssociationSet>
-          <AssociationSet Name="FK__teacher__gid__6383C8BA" Association="Self.FK__teacher__gid__6383C8BA">
-            <End Role="group" EntitySet="group" />
-            <End Role="teacher" EntitySet="teacher" />
-          </AssociationSet>
           <AssociationSet Name="FK__teacher__uid__628FA481" Association="Self.FK__teacher__uid__628FA481">
             <End Role="users" EntitySet="users" />
             <End Role="teacher" EntitySet="teacher" />
@@ -811,17 +782,13 @@
             <End Role="teacher" EntitySet="teacher" />
             <End Role="TechnologyExpert" EntitySet="TechnologyExpert" />
           </AssociationSet>
-          <AssociationSet Name="FK__TechnologyEx__id__57A801BA" Association="Self.FK__TechnologyEx__id__57A801BA">
+          <AssociationSet Name="FK__TechnologyE__uid__45544755" Association="Self.FK__TechnologyE__uid__45544755">
             <End Role="users" EntitySet="users" />
             <End Role="TechnologyExpert" EntitySet="TechnologyExpert" />
           </AssociationSet>
-          <AssociationSet Name="FK_teacher_Schedule" Association="Self.FK_teacher_Schedule">
-            <End Role="Schedule" EntitySet="Schedule" />
-            <End Role="teacher" EntitySet="teacher" />
-          </AssociationSet>
-          <AssociationSet Name="FK_teacher_Technology" Association="Self.FK_teacher_Technology">
-            <End Role="Technology" EntitySet="Technology" />
-            <End Role="teacher" EntitySet="teacher" />
+          <AssociationSet Name="FK__TechnologyEx__id__57A801BA" Association="Self.FK__TechnologyEx__id__57A801BA">
+            <End Role="users" EntitySet="users" />
+            <End Role="TechnologyExpert" EntitySet="TechnologyExpert" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -861,7 +828,6 @@
           <NavigationProperty Name="projectRequests" Relationship="Self.FK__projectRequ__gid__41B8C09B" FromRole="group" ToRole="projectRequests" />
           <NavigationProperty Name="SupervisorGroupConnection" Relationship="Self.FK__SupervisorG__gid__0E04126B" FromRole="group" ToRole="SupervisorGroupConnection" />
           <NavigationProperty Name="Task" Relationship="Self.FK__Task__gid__7EC1CEDB" FromRole="group" ToRole="Task" />
-          <NavigationProperty Name="teacher" Relationship="Self.FK__teacher__gid__6383C8BA" FromRole="group" ToRole="teacher" />
         </EntityType>
         <EntityType Name="GroupMember">
           <Key>
@@ -945,7 +911,6 @@
           <NavigationProperty Name="Meeting" Relationship="Self.FK__Meeting__Sch_id__2E70E1FD" FromRole="Schedule" ToRole="Meeting" />
           <NavigationProperty Name="TimeSlots" Relationship="Self.FK__Schedule__slotId__29AC2CE0" FromRole="Schedule" ToRole="TimeSlots" />
           <NavigationProperty Name="teacher" Relationship="Self.FK__Schedule__tid__2AA05119" FromRole="Schedule" ToRole="teacher" />
-          <NavigationProperty Name="teacher1" Relationship="Self.FK_teacher_Schedule" FromRole="Schedule" ToRole="teacher" />
         </EntityType>
         <EntityType Name="Student">
           <Key>
@@ -1007,18 +972,15 @@
             <PropertyRef Name="tid" />
           </Key>
           <Property Name="tid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Ap_Id" Type="Int32" />
+          <Property Name="image" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="AppointmentRequests" Relationship="Self.FK__Appointme__Reque__39E294A9" FromRole="teacher" ToRole="AppointmentRequests" />
-          <NavigationProperty Name="group" Relationship="Self.FK__teacher__gid__6383C8BA" FromRole="teacher" ToRole="group" />
           <NavigationProperty Name="Meeting" Relationship="Self.FK__Meeting__created__30592A6F" FromRole="teacher" ToRole="Meeting" />
           <NavigationProperty Name="Project" Relationship="Self.FK__Project__tid__0880433F" FromRole="teacher" ToRole="Project" />
           <NavigationProperty Name="projectRequests" Relationship="Self.FK__projectRequ__tid__42ACE4D4" FromRole="teacher" ToRole="projectRequests" />
           <NavigationProperty Name="Schedule" Relationship="Self.FK__Schedule__tid__2AA05119" FromRole="teacher" ToRole="Schedule" />
-          <NavigationProperty Name="Schedule1" Relationship="Self.FK_teacher_Schedule" FromRole="teacher" ToRole="Schedule" />
           <NavigationProperty Name="SupervisorGroupConnection" Relationship="Self.FK__SupervisorG__tid__0EF836A4" FromRole="teacher" ToRole="SupervisorGroupConnection" />
           <NavigationProperty Name="users" Relationship="Self.FK__teacher__uid__628FA481" FromRole="teacher" ToRole="users" />
           <NavigationProperty Name="TechnologyExpert" Relationship="Self.FK__TechnologyE__tid__589C25F3" FromRole="teacher" ToRole="TechnologyExpert" />
-          <NavigationProperty Name="Technology" Relationship="Self.FK_teacher_Technology" FromRole="teacher" ToRole="Technology" />
         </EntityType>
         <EntityType Name="TechnicalExpertTechnology">
           <Key>
@@ -1036,7 +998,6 @@
           <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="GroupMember" Relationship="Self.FK__GroupMemb__tecId__6442E2C9" FromRole="Technology" ToRole="GroupMember" />
           <NavigationProperty Name="groupRequests" Relationship="Self.FK__Message__tecId__73852659" FromRole="Technology" ToRole="groupRequests" />
-          <NavigationProperty Name="teacher" Relationship="Self.FK_teacher_Technology" FromRole="Technology" ToRole="teacher" />
           <NavigationProperty Name="TechnicalExpertTechnology" Relationship="Self.FK__Technical__techn__68D28DBC" FromRole="Technology" ToRole="TechnicalExpertTechnology" />
         </EntityType>
         <EntityType Name="TechnologyExpert">
@@ -1044,9 +1005,11 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="image" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="teacher" Relationship="Self.FK__TechnologyE__tid__589C25F3" FromRole="TechnologyExpert" ToRole="teacher" />
           <NavigationProperty Name="TechnicalExpertTechnology" Relationship="Self.FK__Technical__exper__67DE6983" FromRole="TechnologyExpert" ToRole="TechnicalExpertTechnology" />
-          <NavigationProperty Name="users" Relationship="Self.FK__TechnologyEx__id__57A801BA" FromRole="TechnologyExpert" ToRole="users" />
+          <NavigationProperty Name="users" Relationship="Self.FK__TechnologyE__uid__45544755" FromRole="TechnologyExpert" ToRole="users" />
+          <NavigationProperty Name="users1" Relationship="Self.FK__TechnologyEx__id__57A801BA" FromRole="TechnologyExpert" ToRole="users" />
         </EntityType>
         <EntityType Name="TimeSlots">
           <Key>
@@ -1071,7 +1034,8 @@
           <NavigationProperty Name="Project" Relationship="Self.FK__Project__request__2CBDA3B5" FromRole="users" ToRole="Project" />
           <NavigationProperty Name="Student" Relationship="Self.FK__Student__uid__5CD6CB2B" FromRole="users" ToRole="Student" />
           <NavigationProperty Name="teacher" Relationship="Self.FK__teacher__uid__628FA481" FromRole="users" ToRole="teacher" />
-          <NavigationProperty Name="TechnologyExpert" Relationship="Self.FK__TechnologyEx__id__57A801BA" FromRole="users" ToRole="TechnologyExpert" />
+          <NavigationProperty Name="TechnologyExpert" Relationship="Self.FK__TechnologyE__uid__45544755" FromRole="users" ToRole="TechnologyExpert" />
+          <NavigationProperty Name="TechnologyExpert1" Relationship="Self.FK__TechnologyEx__id__57A801BA" FromRole="users" ToRole="TechnologyExpert" />
         </EntityType>
         <Association Name="FK__Appointme__Reque__39E294A9">
           <End Role="teacher" Type="Self.teacher" Multiplicity="0..1" />
@@ -1116,10 +1080,6 @@
         <Association Name="FK__Task__gid__7EC1CEDB">
           <End Role="group" Type="Self.group" Multiplicity="0..1" />
           <End Role="Task" Type="Self.Task" Multiplicity="*" />
-        </Association>
-        <Association Name="FK__teacher__gid__6383C8BA">
-          <End Role="group" Type="Self.group" Multiplicity="0..1" />
-          <End Role="teacher" Type="Self.teacher" Multiplicity="*" />
         </Association>
         <Association Name="FK__GroupMemb__st_id__625A9A57">
           <End Role="Student" Type="Self.Student" Multiplicity="1" />
@@ -1189,10 +1149,6 @@
           <End Role="teacher" Type="Self.teacher" Multiplicity="0..1" />
           <End Role="Schedule" Type="Self.Schedule" Multiplicity="*" />
         </Association>
-        <Association Name="FK_teacher_Schedule">
-          <End Role="Schedule" Type="Self.Schedule" Multiplicity="0..1" />
-          <End Role="teacher" Type="Self.teacher" Multiplicity="*" />
-        </Association>
         <Association Name="FK__Student__uid__5CD6CB2B">
           <End Role="users" Type="Self.users" Multiplicity="0..1" />
           <End Role="Student" Type="Self.Student" Multiplicity="*" />
@@ -1213,10 +1169,6 @@
           <End Role="teacher" Type="Self.teacher" Multiplicity="0..1" />
           <End Role="TechnologyExpert" Type="Self.TechnologyExpert" Multiplicity="*" />
         </Association>
-        <Association Name="FK_teacher_Technology">
-          <End Role="Technology" Type="Self.Technology" Multiplicity="0..1" />
-          <End Role="teacher" Type="Self.teacher" Multiplicity="*" />
-        </Association>
         <Association Name="FK__Technical__exper__67DE6983">
           <End Role="TechnologyExpert" Type="Self.TechnologyExpert" Multiplicity="0..1" />
           <End Role="TechnicalExpertTechnology" Type="Self.TechnicalExpertTechnology" Multiplicity="*" />
@@ -1224,6 +1176,10 @@
         <Association Name="FK__Technical__techn__68D28DBC">
           <End Role="Technology" Type="Self.Technology" Multiplicity="0..1" />
           <End Role="TechnicalExpertTechnology" Type="Self.TechnicalExpertTechnology" Multiplicity="*" />
+        </Association>
+        <Association Name="FK__TechnologyE__uid__45544755">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="TechnologyExpert" Type="Self.TechnologyExpert" Multiplicity="*" />
         </Association>
         <Association Name="FK__TechnologyEx__id__57A801BA">
           <End Role="users" Type="Self.users" Multiplicity="1" />
@@ -1237,7 +1193,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="OfficialSASEntities39" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="OfficialSASEntities41" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="AppointmentRequests" EntityType="Self.AppointmentRequests" />
           <EntitySet Name="group" EntityType="Self.group" />
           <EntitySet Name="GroupMember" EntityType="Self.GroupMember" />
@@ -1302,10 +1258,6 @@
             <End Role="group" EntitySet="group" />
             <End Role="Task" EntitySet="Task" />
           </AssociationSet>
-          <AssociationSet Name="FK__teacher__gid__6383C8BA" Association="Self.FK__teacher__gid__6383C8BA">
-            <End Role="group" EntitySet="group" />
-            <End Role="teacher" EntitySet="teacher" />
-          </AssociationSet>
           <AssociationSet Name="FK__GroupMemb__st_id__625A9A57" Association="Self.FK__GroupMemb__st_id__625A9A57">
             <End Role="Student" EntitySet="Student" />
             <End Role="GroupMember" EntitySet="GroupMember" />
@@ -1366,10 +1318,6 @@
             <End Role="teacher" EntitySet="teacher" />
             <End Role="Schedule" EntitySet="Schedule" />
           </AssociationSet>
-          <AssociationSet Name="FK_teacher_Schedule" Association="Self.FK_teacher_Schedule">
-            <End Role="Schedule" EntitySet="Schedule" />
-            <End Role="teacher" EntitySet="teacher" />
-          </AssociationSet>
           <AssociationSet Name="FK__Student__uid__5CD6CB2B" Association="Self.FK__Student__uid__5CD6CB2B">
             <End Role="users" EntitySet="users" />
             <End Role="Student" EntitySet="Student" />
@@ -1390,10 +1338,6 @@
             <End Role="teacher" EntitySet="teacher" />
             <End Role="TechnologyExpert" EntitySet="TechnologyExpert" />
           </AssociationSet>
-          <AssociationSet Name="FK_teacher_Technology" Association="Self.FK_teacher_Technology">
-            <End Role="Technology" EntitySet="Technology" />
-            <End Role="teacher" EntitySet="teacher" />
-          </AssociationSet>
           <AssociationSet Name="FK__Technical__exper__67DE6983" Association="Self.FK__Technical__exper__67DE6983">
             <End Role="TechnologyExpert" EntitySet="TechnologyExpert" />
             <End Role="TechnicalExpertTechnology" EntitySet="TechnicalExpertTechnology" />
@@ -1401,6 +1345,10 @@
           <AssociationSet Name="FK__Technical__techn__68D28DBC" Association="Self.FK__Technical__techn__68D28DBC">
             <End Role="Technology" EntitySet="Technology" />
             <End Role="TechnicalExpertTechnology" EntitySet="TechnicalExpertTechnology" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TechnologyE__uid__45544755" Association="Self.FK__TechnologyE__uid__45544755">
+            <End Role="users" EntitySet="users" />
+            <End Role="TechnologyExpert" EntitySet="TechnologyExpert" />
           </AssociationSet>
           <AssociationSet Name="FK__TechnologyEx__id__57A801BA" Association="Self.FK__TechnologyEx__id__57A801BA">
             <End Role="users" EntitySet="users" />
@@ -1412,7 +1360,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities39">
+        <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities41">
           <EntitySetMapping Name="AppointmentRequests">
             <EntityTypeMapping TypeName="OfficialSASModel.AppointmentRequests">
               <MappingFragment StoreEntitySet="AppointmentRequests">
@@ -1558,7 +1506,7 @@
             <EntityTypeMapping TypeName="OfficialSASModel.teacher">
               <MappingFragment StoreEntitySet="teacher">
                 <ScalarProperty Name="tid" ColumnName="tid" />
-                <ScalarProperty Name="Ap_Id" ColumnName="Ap_Id" />
+                <ScalarProperty Name="image" ColumnName="image" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1581,6 +1529,7 @@
             <EntityTypeMapping TypeName="OfficialSASModel.TechnologyExpert">
               <MappingFragment StoreEntitySet="TechnologyExpert">
                 <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="image" ColumnName="image" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1699,15 +1648,6 @@
             </EndProperty>
             <EndProperty Name="Task">
               <ScalarProperty Name="task_id" ColumnName="task_id" />
-            </EndProperty>
-            <Condition IsNull="false" ColumnName="gid" />
-          </AssociationSetMapping>
-          <AssociationSetMapping Name="FK__teacher__gid__6383C8BA" TypeName="OfficialSASModel.FK__teacher__gid__6383C8BA" StoreEntitySet="teacher">
-            <EndProperty Name="group">
-              <ScalarProperty Name="gid" ColumnName="gid" />
-            </EndProperty>
-            <EndProperty Name="teacher">
-              <ScalarProperty Name="tid" ColumnName="tid" />
             </EndProperty>
             <Condition IsNull="false" ColumnName="gid" />
           </AssociationSetMapping>
@@ -1837,15 +1777,6 @@
             </EndProperty>
             <Condition IsNull="false" ColumnName="tid" />
           </AssociationSetMapping>
-          <AssociationSetMapping Name="FK_teacher_Schedule" TypeName="OfficialSASModel.FK_teacher_Schedule" StoreEntitySet="teacher">
-            <EndProperty Name="Schedule">
-              <ScalarProperty Name="Sch_id" ColumnName="Sch_id" />
-            </EndProperty>
-            <EndProperty Name="teacher">
-              <ScalarProperty Name="tid" ColumnName="tid" />
-            </EndProperty>
-            <Condition IsNull="false" ColumnName="Sch_id" />
-          </AssociationSetMapping>
           <AssociationSetMapping Name="FK__Student__uid__5CD6CB2B" TypeName="OfficialSASModel.FK__Student__uid__5CD6CB2B" StoreEntitySet="Student">
             <EndProperty Name="users">
               <ScalarProperty Name="uid" ColumnName="uid" />
@@ -1891,15 +1822,6 @@
             </EndProperty>
             <Condition IsNull="false" ColumnName="tid" />
           </AssociationSetMapping>
-          <AssociationSetMapping Name="FK_teacher_Technology" TypeName="OfficialSASModel.FK_teacher_Technology" StoreEntitySet="teacher">
-            <EndProperty Name="Technology">
-              <ScalarProperty Name="id" ColumnName="tecId" />
-            </EndProperty>
-            <EndProperty Name="teacher">
-              <ScalarProperty Name="tid" ColumnName="tid" />
-            </EndProperty>
-            <Condition IsNull="false" ColumnName="tecId" />
-          </AssociationSetMapping>
           <AssociationSetMapping Name="FK__Technical__exper__67DE6983" TypeName="OfficialSASModel.FK__Technical__exper__67DE6983" StoreEntitySet="TechnicalExpertTechnology">
             <EndProperty Name="TechnologyExpert">
               <ScalarProperty Name="id" ColumnName="expert_id" />
@@ -1917,6 +1839,15 @@
               <ScalarProperty Name="id" ColumnName="id" />
             </EndProperty>
             <Condition IsNull="false" ColumnName="technology_id" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK__TechnologyE__uid__45544755" TypeName="OfficialSASModel.FK__TechnologyE__uid__45544755" StoreEntitySet="TechnologyExpert">
+            <EndProperty Name="users">
+              <ScalarProperty Name="uid" ColumnName="uid" />
+            </EndProperty>
+            <EndProperty Name="TechnologyExpert">
+              <ScalarProperty Name="id" ColumnName="id" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="uid" />
           </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>

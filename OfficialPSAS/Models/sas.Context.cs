@@ -13,10 +13,10 @@ namespace OfficialPSAS.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class OfficialSASEntities39 : DbContext
+    public partial class OfficialSASEntities41 : DbContext
     {
-        public OfficialSASEntities39()
-            : base("name=OfficialSASEntities39")
+        public OfficialSASEntities41()
+            : base("name=OfficialSASEntities41")
         {
         }
     

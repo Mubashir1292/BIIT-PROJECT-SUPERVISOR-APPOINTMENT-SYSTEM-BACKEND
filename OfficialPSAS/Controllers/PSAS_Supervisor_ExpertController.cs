@@ -13,7 +13,7 @@ namespace OfficialPSAS.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class PSAS_Supervisor_ExpertController : ApiController
     {
-        OfficialSASEntities39 db = new OfficialSASEntities39(); 
+        OfficialSASEntities41 db = new OfficialSASEntities41(); 
                 /*-------------------====================   Get All Notifications of relative supervisor    ==========-----------------------*/
         [HttpGet]
         public HttpResponseMessage GetAllNotifications(int teacher_id)

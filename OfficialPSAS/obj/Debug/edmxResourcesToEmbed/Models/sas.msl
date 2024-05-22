@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities39">
+  <EntityContainerMapping StorageEntityContainer="OfficialSASModelStoreContainer" CdmEntityContainer="OfficialSASEntities41">
     <EntitySetMapping Name="AppointmentRequests">
       <EntityTypeMapping TypeName="OfficialSASModel.AppointmentRequests">
         <MappingFragment StoreEntitySet="AppointmentRequests">
@@ -146,7 +146,7 @@
       <EntityTypeMapping TypeName="OfficialSASModel.teacher">
         <MappingFragment StoreEntitySet="teacher">
           <ScalarProperty Name="tid" ColumnName="tid" />
-          <ScalarProperty Name="Ap_Id" ColumnName="Ap_Id" />
+          <ScalarProperty Name="image" ColumnName="image" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -169,6 +169,7 @@
       <EntityTypeMapping TypeName="OfficialSASModel.TechnologyExpert">
         <MappingFragment StoreEntitySet="TechnologyExpert">
           <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="image" ColumnName="image" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -287,15 +288,6 @@
       </EndProperty>
       <EndProperty Name="Task">
         <ScalarProperty Name="task_id" ColumnName="task_id" />
-      </EndProperty>
-      <Condition IsNull="false" ColumnName="gid" />
-    </AssociationSetMapping>
-    <AssociationSetMapping Name="FK__teacher__gid__6383C8BA" TypeName="OfficialSASModel.FK__teacher__gid__6383C8BA" StoreEntitySet="teacher">
-      <EndProperty Name="group">
-        <ScalarProperty Name="gid" ColumnName="gid" />
-      </EndProperty>
-      <EndProperty Name="teacher">
-        <ScalarProperty Name="tid" ColumnName="tid" />
       </EndProperty>
       <Condition IsNull="false" ColumnName="gid" />
     </AssociationSetMapping>
@@ -425,15 +417,6 @@
       </EndProperty>
       <Condition IsNull="false" ColumnName="tid" />
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK_teacher_Schedule" TypeName="OfficialSASModel.FK_teacher_Schedule" StoreEntitySet="teacher">
-      <EndProperty Name="Schedule">
-        <ScalarProperty Name="Sch_id" ColumnName="Sch_id" />
-      </EndProperty>
-      <EndProperty Name="teacher">
-        <ScalarProperty Name="tid" ColumnName="tid" />
-      </EndProperty>
-      <Condition IsNull="false" ColumnName="Sch_id" />
-    </AssociationSetMapping>
     <AssociationSetMapping Name="FK__Student__uid__5CD6CB2B" TypeName="OfficialSASModel.FK__Student__uid__5CD6CB2B" StoreEntitySet="Student">
       <EndProperty Name="users">
         <ScalarProperty Name="uid" ColumnName="uid" />
@@ -479,15 +462,6 @@
       </EndProperty>
       <Condition IsNull="false" ColumnName="tid" />
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK_teacher_Technology" TypeName="OfficialSASModel.FK_teacher_Technology" StoreEntitySet="teacher">
-      <EndProperty Name="Technology">
-        <ScalarProperty Name="id" ColumnName="tecId" />
-      </EndProperty>
-      <EndProperty Name="teacher">
-        <ScalarProperty Name="tid" ColumnName="tid" />
-      </EndProperty>
-      <Condition IsNull="false" ColumnName="tecId" />
-    </AssociationSetMapping>
     <AssociationSetMapping Name="FK__Technical__exper__67DE6983" TypeName="OfficialSASModel.FK__Technical__exper__67DE6983" StoreEntitySet="TechnicalExpertTechnology">
       <EndProperty Name="TechnologyExpert">
         <ScalarProperty Name="id" ColumnName="expert_id" />
@@ -505,6 +479,15 @@
         <ScalarProperty Name="id" ColumnName="id" />
       </EndProperty>
       <Condition IsNull="false" ColumnName="technology_id" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK__TechnologyE__uid__45544755" TypeName="OfficialSASModel.FK__TechnologyE__uid__45544755" StoreEntitySet="TechnologyExpert">
+      <EndProperty Name="users">
+        <ScalarProperty Name="uid" ColumnName="uid" />
+      </EndProperty>
+      <EndProperty Name="TechnologyExpert">
+        <ScalarProperty Name="id" ColumnName="id" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="uid" />
     </AssociationSetMapping>
   </EntityContainerMapping>
 </Mapping>

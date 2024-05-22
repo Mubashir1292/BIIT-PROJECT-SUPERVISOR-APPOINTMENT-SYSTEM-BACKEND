@@ -21,10 +21,12 @@ namespace OfficialPSAS.Models
         }
     
         public string id { get; set; }
+        public string image { get; set; }
     
         public virtual teacher teacher { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TechnicalExpertTechnology> TechnicalExpertTechnology { get; set; }
         public virtual users users { get; set; }
+        public virtual users users1 { get; set; }
     }
 }

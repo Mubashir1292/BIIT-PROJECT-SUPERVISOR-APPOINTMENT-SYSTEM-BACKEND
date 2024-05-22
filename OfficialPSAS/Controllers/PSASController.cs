@@ -14,7 +14,7 @@ namespace OfficialPSAS.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class PSASController : ApiController
     {
-        OfficialSASEntities39 db = new OfficialSASEntities39();
+        OfficialSASEntities41 db = new OfficialSASEntities41();
         /*public string  CheckForTechnicalExpert(string tid)
         {
             var teacherAndTechnicalExpertSame = from t in db.teacher
@@ -44,75 +44,120 @@ namespace OfficialPSAS.Controllers
         {
             try
             {
-                var findingUser = db.users.Where((u) => u.uid == id && u.password == password).Select(s => new
+                var user = db.users.Where(s => s.uid == id && s.password == password).FirstOrDefault();
+                if (user != null)
                 {
-                    s.uid,
-                    s.username,
-                    s.role
-                }).FirstOrDefault();
-                if (findingUser != null)
-                {
-                    if (findingUser.role == "student")
+                    if (user.role == "student")
                     {
-                        var findingStudent = db.Student.Where(s => s.st_id == findingUser.uid).FirstOrDefault();
-                        var findingTechnology = db.GroupMember.Where(s => s.st_id == findingUser.uid).FirstOrDefault();
-                        if (findingTechnology != null)
+                        var student = db.Student.Where(s => s.st_id == user.uid).FirstOrDefault();
+                        if (student != null)
                         {
                             var response = new
                             {
-                                findingTechnology.Student.users.uid,
-                                findingTechnology.Student.cgpa,
-                                findingTechnology.Technology.name,
-                                findingTechnology.group.gid,
-                                findingTechnology.Student.users.username,
-                                findingUser.role,
-                                findingStudent.image,
-                            };
-                        return Request.CreateResponse(response);
-                        }
-                        else
-                        {
-                            var response = new
-                            {
-                                findingUser.uid,
-                                findingStudent.cgpa,
-                                findingUser.username,
-                                findingUser.role,
-                               
+                                ID=student.st_id,
+                                name=student.users.username,
+                                student.cgpa,
+                                student.image,
+                                student.Grade,
+                                student.semester,
+                                student.section,
+                                Technology=student.GroupMember.Technology !=null ? student.GroupMember.Technology.name : "",                            
+                                user.role,
                             };
                             return Request.CreateResponse(response);
                         }
-                    }
-                    else if (findingUser.role == "teacher")
-                    {
-                        //var isTechnicalExpert = db.TechnologyExpert.Where(s => s.teacher==findingUser.teacher).FirstOrDefault();
-                        // need a join here for checking is the same person is the technical Expert or not..
-                        var isTeacherFounded = db.teacher.Where(s => s.users.uid == findingUser.uid).FirstOrDefault();
-                        if(isTeacherFounded != null)
+                        else
                         {
-                            // set this material also..
-                            var isTechnicalExpertFounded = db.TechnologyExpert.Where(s => s.teacher.tid == isTeacherFounded.tid).FirstOrDefault();
-                            if (isTeacherFounded != null)
-                            {                                
-                                return Request.CreateResponse(findingUser);
+                            return Request.CreateResponse("Student Data not founded");
+                        }
+                    }
+                    else if (user.role == "teacher")
+                    {
+                        var teacher = db.teacher.Where(s => s.users.uid == user.uid).FirstOrDefault();
+                        if (teacher != null)
+                        {
+                            var teacherResponse = new
+                            {
+                               id=teacher.tid,
+                               name=teacher.users.username,
+                               image=teacher.image,
+                               user.role
+                            };
+                            var TechnicalExpert = db.TechnologyExpert.Where(s => s.teacher.tid == teacher.tid).FirstOrDefault();
+                            if (TechnicalExpert != null)
+                            {
+                                var TechicalExpertWithTeacher = new
+                                {
+                                       teacherResponse,
+                                        id=TechnicalExpert.teacher.tid,
+                                        name=TechnicalExpert.users.username,
+                                        image=TechnicalExpert.image,
+                                        user.role,
+                                };
+                                return Request.CreateResponse(TechicalExpertWithTeacher);
+                            }else
+                            {
+                                return Request.CreateResponse(teacherResponse);
+                            }
+                            // just Teacher Not the Technical Expert
+                        }
+                        else
+                        {
+                            return Request.CreateResponse("Teacher Not Founded");
+                        }
+                    }
+                    else if (user.role == "Technical Expert")
+                    {
+                        var technicalExpert = db.TechnologyExpert.Where(s => s.users.uid == user.uid).FirstOrDefault();
+                        if (technicalExpert != null)
+                        {
+                            var teacher = db.teacher.Where(s => s.tid == technicalExpert.teacher.tid).FirstOrDefault();
+                            if (teacher != null)
+                            {
+                                var response = new
+                                {
+                                    tid=technicalExpert.teacher.tid,
+                                    name=technicalExpert.users.username,
+                                    image=teacher.image,
+                                    user.role
+                                };
+                                return Request.CreateResponse(response);
                             }
                             else
                             {
-                                return Request.CreateResponse(findingUser);
+                                return Request.CreateResponse("Teacher not founded");
                             }
                         }
                         else
                         {
-                            return Request.CreateResponse("Teacher Not founded");
-                        }                       
+                            return Request.CreateResponse("Technical Expert not Founded");
+                        }
+                    }
+                    else if (user.role == "Project Commettiee")
+                    {
+                        var projectCommettiee = db.users.Where(s => s.uid == user.uid).FirstOrDefault();
+                        if (projectCommettiee != null)
+                        {
+                            var response = new
+                            {
+                                id=projectCommettiee.uid,
+                                name=projectCommettiee.username,
+                            };
+                            return Request.CreateResponse(response);
+                        }
+                        else
+                        {
+                            return Request.CreateResponse("Not Records at Project Commettiee");
+                        }
                     }
                     else
                     {
-                        return Request.CreateResponse(findingUser);
+                        return Request.CreateResponse("User Role Not Founded");
                     }
-                }else
+                }
+                else
                 {
-                    return Request.CreateResponse("User Not Found "+id +","+password);
+                    return Request.CreateResponse("User Not Founded");
                 }
             }
             catch (Exception cp) {

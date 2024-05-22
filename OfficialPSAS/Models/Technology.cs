@@ -19,7 +19,6 @@ namespace OfficialPSAS.Models
         {
             this.GroupMember = new HashSet<GroupMember>();
             this.groupRequests = new HashSet<groupRequests>();
-            this.teacher = new HashSet<teacher>();
             this.TechnicalExpertTechnology = new HashSet<TechnicalExpertTechnology>();
         }
     
@@ -30,8 +29,6 @@ namespace OfficialPSAS.Models
         public virtual ICollection<GroupMember> GroupMember { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<groupRequests> groupRequests { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<teacher> teacher { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TechnicalExpertTechnology> TechnicalExpertTechnology { get; set; }
     }
